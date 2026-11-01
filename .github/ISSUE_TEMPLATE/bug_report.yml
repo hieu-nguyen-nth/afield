@@ -1,0 +1,16 @@
+name: Bug report
+description: Report a reproducible Afield problem without private data
+title: "Bug: "
+body:
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Expected and actual behavior
+      description: Include steps, app version and a public/synthetic example. Never include keys or private exports.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Redacted evidence and environment
+      description: State local/hosted, browser, worker mode and any safe error code.
