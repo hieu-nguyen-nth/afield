@@ -1,8 +1,8 @@
 import {
   sourceModeSchema,
   directSourceSchema,
-  type Run,
-} from "../../domain/contracts";
+} from "@/features/research/models";
+import type { Run } from "@/features/generation/models";
 import { z } from "zod";
 export function runSourceMode(snapshot: Run["snapshot"]) {
   return sourceModeSchema.parse(

@@ -26,6 +26,8 @@ erDiagram
   TOPICS ||--o{ EVENTS : tracks
 ```
 
+The complete generated [column/constraint/index/RLS reference](DATABASE-SCHEMA.md) and [machine-readable schema](schema.json) are derived from a disposable database after applying every migration. Regenerate them with `npm run docs:schema`; no live database or private rows are read.
+
 ## Table dictionary
 
 | Table | Key data / purpose |
@@ -53,16 +55,35 @@ erDiagram
 
 The SQL defines 21 application tables across public/private schemas. Auth and Storage maintain additional platform tables. Owner/topic/run composite foreign keys enforce matching references; request identity is unique by owner/intent/request key, and publication is unique per run. Date is not a brief key; multiple briefs may share a local date. Timestamps are UTC; named timezones determine scheduling/calendar ranges.
 
-## Application contracts
+## Application models and their database correlation
 
-| Module | Models and bounds |
-|---|---|
-| [inputs](../../apps/web/src/domain/inputs.ts) | `OutputLimit`, `SourceMode`, Explore schema and direct-source schema. Word budgets: 400/800/1400; listening budgets: 60–900 seconds in 60-second increments; up to five direct URLs |
-| [topics](../../apps/web/src/domain/topics.ts) | `TopicConfig`, schedule, source, template and block schemas. Up to 20 subtopics, 10 sources (five approved), 10 templates and eight distinct blocks; daily/weekly schedule and valid named timezone |
-| [research](../../apps/web/src/domain/research.ts) | `Evidence` and `SourceCheck`; text plus traceable metadata and retrieval outcome |
-| [runs](../../apps/web/src/domain/runs.ts) | `Run`, input/config snapshot, stage/status/events/attempts and internal lease/draft fields |
-| [briefs](../../apps/web/src/domain/briefs.ts) | Structured content and `Brief`; canonical text/hash, citations, source checks, partial/budget/audio state |
-| [contract exports](../../apps/web/src/domain/contracts.ts) | Public re-export surface; definitions live in their owning files |
+| Model / owner | Definition | Persisted correlation |
+|---|---|---|
+| Authentication | [auth/models.ts](../../apps/web/src/features/auth/models.ts) | Provider User / public identity; profiles and admission are separate product-access records |
+| Account summary | [account/models.ts](../../apps/web/src/features/account/models.ts) | Composes identity, usage/reset times and capability flags; not a database table |
+| Output limit and depth | [shared/contracts/output.ts](../../apps/web/src/shared/contracts/output.ts) | Embedded in topic/template JSON and accepted run snapshots |
+| Explore request | [explore/models.ts](../../apps/web/src/features/explore/models.ts) | Prompt, context, sources, coverage and limits in `runs.snapshot`; no extra Explore table |
+| Topic and configuration | [topics/models.ts](../../apps/web/src/features/topics/models.ts) | `topics.config` plus owned source/template/subtopic/schedule rows |
+| Evidence and source checks | [research/models.ts](../../apps/web/src/features/research/models.ts) | `documents` and `source_checks`, identified by owned run |
+| Run | [generation/models.ts](../../apps/web/src/features/generation/models.ts) | `runs`; related outbox/events/leases are internal execution state |
+| Content, Brief, BriefRow | [briefs/models.ts](../../apps/web/src/features/briefs/models.ts) | Immutable `briefs` snapshot, normalized `brief_items`/`citations`; BriefRow is a listing projection |
+| Audio execution | [audio/service.ts](../../apps/web/src/features/audio/service.ts) | Explicit `audio_jobs`, verified `audio_assets`, selected audio reference on the brief |
+
+Zod schemas validate incoming/configuration/model output; TypeScript types describe values in code; SQL defines durable records and enforces relational integrity. They are connected contracts rather than three separate sources of product truth. The app uses Supabase queries and transactional SQL RPCs, not an unimplemented ORM schema. Word budgets remain 400/800/1400; listening budgets are 60–900 seconds in minute increments. Topic contracts bound interests, sources, templates and block order.
+
+### How relationships enforce ownership
+
+- `auth.users.id → profiles.id` is an optional one-to-one profile relation; `auth.users.id → topics.owner_id` and `runs.owner_id` establish the owner identity.
+- Sources, templates, schedules and subtopics reference `(topic_id, owner_id)`, so they cannot attach to another owner's topic. Template blocks reference `(template_id, owner_id, topic_id)`.
+- An Explore run has no topic and is manual; an Update run references a topic. A run snapshots accepted inputs so later configuration edits do not change its meaning.
+- `briefs.run_id` is unique: one published result per run. A topic can have many runs/briefs and multiple results on the same date.
+- Brief items reference a brief/run/owner; citation rows join those items to evidence documents under the same run/owner. The brief also keeps a rendered citation snapshot for stable reading.
+- Selected audio is checked by its asset ID, owner, run and text hash. Reuse can create per-run asset metadata referencing a previously verified same-owner media object; the later migration allows shared physical storage paths while preserving selected-asset checks.
+- The admission list is an email-based runtime check, not a foreign key or editable client role. RLS and server guards are additional access rules, not substitutes for the relationships above.
+
+### Configuration versus historical snapshots
+
+Editable topic/source/template JSON is validated in the application. Normalized child records provide relationships and ordered subtopics/blocks. Accepting a run captures its configuration and coverage window; publication saves text, items and citations together. Changing a source later changes future retrieval while the saved brief retains its own evidence. This deliberate duplication preserves history and auditability rather than treating current configuration as historical truth.
 
 Source modes: `sources_only`, `web_only`, `sources_and_web`. Per-URL scopes: `page` (exact page), `feed` (RSS/Atom), `site` (bounded links), `search` (domain search). Source approval: recommended/approved/disabled/removed. Wider web discovery and selected-site search are distinct permissions; sources-only may search an explicitly chosen site.
 

@@ -168,12 +168,28 @@ test("main layouts keep headings inside panels and fit desktop and mobile", asyn
     await capture("topics");
     await page.getByRole("button", { name: "New topic", exact: true }).click();
     await capture("topic-editor");
-    await expect(page.getByRole("heading", {name:"Topic focus", exact:true})).toBeVisible();
-    await expect(page.getByRole("heading", {name:"Reading & delivery", exact:true})).toBeVisible();
-    expect(await page.getByLabel("Topic name", {exact:true}).evaluate(el=>parseFloat(getComputedStyle(el).fontSize))).toBeGreaterThanOrEqual(14);
-    const gridGap=await page.locator(".topic-settings-panel .form-grid").first().evaluate(el=>parseFloat(getComputedStyle(el).rowGap));
+    await expect(
+      page.getByRole("heading", { name: "Topic focus", exact: true }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Reading & delivery", exact: true }),
+    ).toBeVisible();
+    expect(
+      await page
+        .getByLabel("Topic name", { exact: true })
+        .evaluate((el) => parseFloat(getComputedStyle(el).fontSize)),
+    ).toBeGreaterThanOrEqual(14);
+    const gridGap = await page
+      .locator(".topic-settings-panel .form-grid")
+      .first()
+      .evaluate((el) => parseFloat(getComputedStyle(el).rowGap));
     expect(gridGap).toBe(14);
-    const arrowStyle = await page.getByRole("combobox", {name:/^Frequency/}).evaluate(el=>({appearance:getComputedStyle(el).appearance,padding:parseFloat(getComputedStyle(el).paddingRight)}));
+    const arrowStyle = await page
+      .getByRole("combobox", { name: /^Frequency/ })
+      .evaluate((el) => ({
+        appearance: getComputedStyle(el).appearance,
+        padding: parseFloat(getComputedStyle(el).paddingRight),
+      }));
     expect(arrowStyle.appearance).toBe("none");
     expect(arrowStyle.padding).toBeGreaterThanOrEqual(32);
     await page

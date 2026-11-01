@@ -7,7 +7,8 @@ import {
   publicUrl,
 } from "../../infrastructure/network/safe-fetch";
 import { search } from "../../infrastructure/providers/providers";
-import type { Evidence, Run, SourceCheck } from "../../domain/contracts";
+import type { Evidence, SourceCheck } from "@/features/research/models";
+import type { Run } from "@/features/generation/models";
 import { AppError } from "../../core/errors";
 import { configuredSources, runSourceMode, usesWeb } from "./source-mode";
 export function urlsIn(text: string) {

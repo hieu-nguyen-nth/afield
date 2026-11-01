@@ -125,7 +125,9 @@ test("subtopic chips keep selections while regenerating and support deselection"
   await expect(governance).toHaveAttribute("aria-pressed", "true");
   await governance.click();
   await expect(governance).toHaveAttribute("aria-pressed", "false");
-  await page.screenshot({ path: "test-results/subtopic-deselected-retained.png" });
+  await page.screenshot({
+    path: "test-results/subtopic-deselected-retained.png",
+  });
   await expect(
     page.getByText("1 / 20 selected", { exact: true }),
   ).toBeVisible();

@@ -1,5 +1,5 @@
 import { Temporal } from "@js-temporal/polyfill";
-import type { TopicConfig } from "../../domain/contracts";
+import type { TopicConfig } from "@/features/topics/models";
 export function nextOccurrence(
   config: TopicConfig["schedule"],
   after = new Date(),

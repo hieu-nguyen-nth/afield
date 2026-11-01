@@ -1,0 +1,4 @@
+npm notice run afield@0.1.0 lint
+npm notice run npm run lint --workspace @afield/web --
+npm notice run @afield/web@0.1.0 lint
+npm notice run eslint .

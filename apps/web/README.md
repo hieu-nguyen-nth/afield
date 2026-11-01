@@ -4,8 +4,8 @@ This folder owns the runnable application, including its source, tests, database
 
 | Folder | Contents |
 |---|---|
-| [src](src) | Pages, UI, domain models, features and infrastructure adapters |
-| [tests](tests) | Unit, disposable database and browser tests |
+| [src](src) | Framework adapters, feature-owned models/UI/services/tests, shared controls and infrastructure |
+| [tests](tests) | Disposable database and cross-feature browser tests; unit tests live beside each feature |
 | [supabase/migrations](supabase/migrations) | Ordered database migrations |
 | [scripts](scripts) | Readiness, bounded connection checks and local worker |
 

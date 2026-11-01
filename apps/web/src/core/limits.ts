@@ -1,6 +1,8 @@
 import { createHash } from "node:crypto";
 import { AppError } from "./errors";
-import type { Content, Evidence, OutputLimit } from "../domain/contracts";
+import type { Content } from "@/features/briefs/models";
+import type { Evidence } from "@/features/research/models";
+import type { OutputLimit } from "@/shared/contracts/output";
 export function prose(content: Content) {
   return [
     ...content.blocks.flatMap((b) => [

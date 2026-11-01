@@ -70,12 +70,12 @@ Exact versions live in [app package.json](apps/web/package.json) and [package-lo
 
 ## Repository map
 
-Run commands from the repository root. The npm workspace forwards them to `apps/web/`; application configuration and private local settings belong inside that folder.
+Run commands from the repository root. The npm workspace forwards them to `apps/web/`; application configuration and private local settings belong inside that folder. Inside the app, [feature folders](apps/web/src/features/README.md) own their models, behavior, UI and unit tests. [Feature branches and pull requests](docs/technical/DEVELOPMENT-WORKFLOW.md) isolate changes before integration.
 
 ```text
 README.md              product overview and start here
 apps/web/              complete runnable application
-  src/                 pages, UI, domain models, features and infrastructure
+  src/                 framework adapters, feature modules, shared UI and infrastructure
   tests/               unit, database and browser cases
   supabase/migrations/ ordered database schema and functions
   scripts/             app readiness, connection check and local worker
@@ -89,7 +89,7 @@ package.json           shared commands and npm workspace definition
 package-lock.json      one dependency lockfile for reproducible installation
 ```
 
-[Documentation index](docs/README.md) links every supported documentation area and source folder. [Architecture](docs/technical/ARCHITECTURE.md) · [Schema and models](docs/technical/DATA-MODELS.md) · [API](docs/technical/API.md) · [User guide](docs/USER-GUIDE.md) · [Decision log](docs/PRODUCT-DECISIONS.md) · [Deployment](docs/technical/DEPLOYMENT.md) · [Contributing](.github/CONTRIBUTING.md) · [Security](.github/SECURITY.md).
+[Documentation index](docs/README.md) links every supported documentation area and source folder. [System design](docs/technical/ARCHITECTURE.md) · [Product architecture](docs/technical/PRODUCT-ARCHITECTURE.md) · [Authentication model](docs/technical/AUTHENTICATION.md) · [Schema and models](docs/technical/DATA-MODELS.md) · [Generated database reference](docs/technical/DATABASE-SCHEMA.md) · [API](docs/technical/API.md) · [User guide](docs/USER-GUIDE.md) · [Decision log](docs/PRODUCT-DECISIONS.md) · [Deployment](docs/technical/DEPLOYMENT.md) · [Contributing](.github/CONTRIBUTING.md) · [Security](.github/SECURITY.md).
 
 ## Repository hygiene
 

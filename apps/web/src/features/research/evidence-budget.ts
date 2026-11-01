@@ -1,4 +1,4 @@
-import type { Evidence } from "../../domain/contracts";
+import type { Evidence } from "@/features/research/models";
 /** Keep review and repairs inside the same bounded free-tier input budget. */
 export function modelEvidence(documents: Evidence[]) {
   const perDocument = Math.min(

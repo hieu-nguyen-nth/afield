@@ -15,7 +15,8 @@
     "worker:dev": "npx trigger.dev@4.8.1 dev",
     "worker:local": "node --import tsx scripts/local-worker.ts",
     "worker:deploy": "npx trigger.dev@4.8.1 deploy",
-    "docs:screenshots": "playwright test tests/browser/walkthrough.spec.ts"
+    "docs:screenshots": "playwright test tests/browser/walkthrough.spec.ts",
+    "docs:schema": "node --import tsx scripts/export-schema.ts"
   },
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "1.1.0",
