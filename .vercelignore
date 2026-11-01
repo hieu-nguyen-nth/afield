@@ -1,0 +1,9 @@
+.env*
+.git/
+node_modules/
+exports/
+test-results/
+playwright-report/
+coverage/
+*.pem
+*.key
