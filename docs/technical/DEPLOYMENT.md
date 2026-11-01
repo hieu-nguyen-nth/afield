@@ -6,7 +6,7 @@ The GitHub destination is the private `hieu-nguyen-nth/afield` repository. Publi
 
 1. Review `git status` and the staged file list; run `npm run verify:repo` to check excluded paths, likely credentials and Markdown targets. Review changes to SQL, auth and provider calls separately.
 2. Use Node 26; run `npm ci`, typecheck, lint, unit tests, both disposable database suites, and the production build. Run browser regressions against the isolated production test server. Preserve results with exact scope; do not imply fixture tests validate live providers.
-3. Commit coherent source/docs/verification changes. CI repeats the quality checks on pull requests and main pushes; it uses dummy values, no cloud database or provider secrets, and read-only repository permissions.
+3. Commit coherent source/docs/verification changes. CI repeats the quality checks on pull requests and main pushes; it uses dummy values, no cloud database or provider secrets, and read-only repository permissions, immutable action references and a pinned Ubuntu runner.
 4. Push to the private repository and inspect the commit and Actions result. For future changes, branch and open a pull request using the supplied template; do not force-push shared main.
 
 ## Optional hosted web + worker
