@@ -1,6 +1,6 @@
 # Database schema and domain models
 
-The five ordered files in [supabase/migrations](../../supabase/migrations) are the executable schema; apply all of them to a fresh project. Later migrations change initial audio, source and admission contracts. Do not infer current behavior from the initial SQL alone. This document is a map, not a second migration source.
+The five ordered files in [apps/web/supabase/migrations](../../apps/web/supabase/migrations) are the executable schema; apply all of them to a fresh project. Later migrations change initial audio, source and admission contracts. Do not infer current behavior from the initial SQL alone. This document is a map, not a second migration source.
 
 ```mermaid
 erDiagram
@@ -57,12 +57,12 @@ The SQL defines 21 application tables across public/private schemas. Auth and St
 
 | Module | Models and bounds |
 |---|---|
-| [inputs](../../src/domain/inputs.ts) | `OutputLimit`, `SourceMode`, Explore schema and direct-source schema. Word budgets: 400/800/1400; listening budgets: 60–900 seconds in 60-second increments; up to five direct URLs |
-| [topics](../../src/domain/topics.ts) | `TopicConfig`, schedule, source, template and block schemas. Up to 20 subtopics, 10 sources (five approved), 10 templates and eight distinct blocks; daily/weekly schedule and valid named timezone |
-| [research](../../src/domain/research.ts) | `Evidence` and `SourceCheck`; text plus traceable metadata and retrieval outcome |
-| [runs](../../src/domain/runs.ts) | `Run`, input/config snapshot, stage/status/events/attempts and internal lease/draft fields |
-| [briefs](../../src/domain/briefs.ts) | Structured content and `Brief`; canonical text/hash, citations, source checks, partial/budget/audio state |
-| [contract exports](../../src/domain/contracts.ts) | Public re-export surface; definitions live in their owning files |
+| [inputs](../../apps/web/src/domain/inputs.ts) | `OutputLimit`, `SourceMode`, Explore schema and direct-source schema. Word budgets: 400/800/1400; listening budgets: 60–900 seconds in 60-second increments; up to five direct URLs |
+| [topics](../../apps/web/src/domain/topics.ts) | `TopicConfig`, schedule, source, template and block schemas. Up to 20 subtopics, 10 sources (five approved), 10 templates and eight distinct blocks; daily/weekly schedule and valid named timezone |
+| [research](../../apps/web/src/domain/research.ts) | `Evidence` and `SourceCheck`; text plus traceable metadata and retrieval outcome |
+| [runs](../../apps/web/src/domain/runs.ts) | `Run`, input/config snapshot, stage/status/events/attempts and internal lease/draft fields |
+| [briefs](../../apps/web/src/domain/briefs.ts) | Structured content and `Brief`; canonical text/hash, citations, source checks, partial/budget/audio state |
+| [contract exports](../../apps/web/src/domain/contracts.ts) | Public re-export surface; definitions live in their owning files |
 
 Source modes: `sources_only`, `web_only`, `sources_and_web`. Per-URL scopes: `page` (exact page), `feed` (RSS/Atom), `site` (bounded links), `search` (domain search). Source approval: recommended/approved/disabled/removed. Wider web discovery and selected-site search are distinct permissions; sources-only may search an explicitly chosen site.
 

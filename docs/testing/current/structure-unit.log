@@ -1,0 +1,12 @@
+npm notice run afield@0.1.0 test
+npm notice run npm run test --workspace @afield/web --
+npm notice run @afield/web@0.1.0 test
+npm notice run vitest run
+
+ RUN  v5.0.5 <repository>/apps/web
+
+
+ Test Files  13 passed (13)
+      Tests  40 passed (40)
+   Start at  21:20:30
+   Duration  1.07s (import 59%, tests 21%, transform 18%, worker 2%)

@@ -2,59 +2,30 @@
   "name": "afield",
   "version": "0.1.0",
   "private": true,
-  "scripts": {
-    "dev": "next dev --hostname 127.0.0.1",
-    "build": "next build --webpack",
-    "start": "next start --hostname 127.0.0.1",
-    "check": "tsc --noEmit",
-    "test": "vitest run",
-    "test:db": "node --import tsx tests/database.ts && node --import tsx tests/source-mode-db.ts",
-    "test:e2e": "playwright test",
-    "lint": "eslint .",
-    "preflight": "tsx scripts/preflight.ts",
-    "worker:dev": "npx trigger.dev@4.8.1 dev",
-    "worker:local": "tsx scripts/local-worker.ts",
-    "worker:deploy": "npx trigger.dev@4.8.1 deploy",
-    "verify:repo": "node scripts/verify-repository.mjs",
-    "docs:screenshots": "playwright test tests/browser/walkthrough.spec.ts"
-  },
-  "dependencies": {
-    "@ffmpeg-installer/ffmpeg": "1.1.0",
-    "@ffprobe-installer/ffprobe": "2.1.2",
-    "@js-temporal/polyfill": "0.5.1",
-    "@next/env": "16.4.3",
-    "@supabase/ssr": "0.12.7",
-    "@supabase/supabase-js": "2.118.0",
-    "@trigger.dev/build": "4.8.1",
-    "@trigger.dev/sdk": "4.8.1",
-    "cheerio": "1.2.0",
-    "fast-xml-parser": "5.11.2",
-    "ipaddr.js": "2.5.0",
-    "lucide-react": "1.63.0",
-    "next": "16.4.3",
-    "react": "19.3.1",
-    "react-dom": "19.3.1",
-    "undici": "8.12.3",
-    "zod": "4.6.7"
-  },
-  "devDependencies": {
-    "@electric-sql/pglite": "0.5.12",
-    "@playwright/test": "1.64.1",
-    "@types/node": "26.6.5",
-    "@types/react": "19.3.0",
-    "@types/react-dom": "19.3.0",
-    "eslint": "9.39.5",
-    "eslint-config-next": "16.4.3",
-    "prettier": "3.9.10",
-    "tsx": "4.23.15",
-    "typescript": "5.9.3",
-    "vitest": "5.0.5"
-  },
   "type": "module",
-  "overrides": {
-    "ws": "8.21.0"
-  },
+  "workspaces": [
+    "apps/web"
+  ],
   "engines": {
     "node": ">=26 <27"
+  },
+  "scripts": {
+    "dev": "npm run dev --workspace @afield/web --",
+    "build": "npm run build --workspace @afield/web --",
+    "start": "npm run start --workspace @afield/web --",
+    "check": "npm run check --workspace @afield/web --",
+    "test": "npm run test --workspace @afield/web --",
+    "test:db": "npm run test:db --workspace @afield/web --",
+    "test:e2e": "npm run test:e2e --workspace @afield/web --",
+    "lint": "npm run lint --workspace @afield/web --",
+    "preflight": "npm run preflight --workspace @afield/web --",
+    "worker:dev": "npm run worker:dev --workspace @afield/web --",
+    "worker:local": "npm run worker:local --workspace @afield/web --",
+    "worker:deploy": "npm run worker:deploy --workspace @afield/web --",
+    "docs:screenshots": "npm run docs:screenshots --workspace @afield/web --",
+    "verify:repo": "node tooling/verify-repository.mjs"
+  },
+  "overrides": {
+    "ws": "8.21.0"
   }
 }

@@ -14,8 +14,8 @@ playwright-report/
 exports/
 .vercel
 
-supabase/.temp/
-supabase/.branches/
+**/supabase/.temp/
+**/supabase/.branches/
 
 # Superseded local evidence; publish only docs/testing/current and curated walkthrough images.
 docs/test-evidence/

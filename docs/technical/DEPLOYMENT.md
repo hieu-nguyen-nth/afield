@@ -11,9 +11,11 @@ The GitHub destination is the private `hieu-nguyen-nth/afield` repository. Publi
 
 ## Optional hosted web + worker
 
+Set the hosting project root directory to `apps/web`. Install dependencies from the repository workspace root using its committed lockfile, and run the web build in `apps/web` (or use the root forwarding commands). Existing hosting project settings must be reviewed before a later deployment; this source reorganization does not change a hosted project automatically.
+
 Choose a compatible Next.js host and configure its server environment using [setup](../KEYS-AND-SETUP.md). Set the exact HTTPS `APP_URL`; configure matching Supabase auth callbacks. Do not deploy `.env.local`, `.vercel` settings or private exports. GitHub Pages cannot run this API/worker/database system.
 
-Use either the local worker connected to the same backend (new work waits when it sleeps) or the supplied Trigger.dev tasks. Hosted workers need their own private environment, FFmpeg/FFprobe support and the current `src/trigger` build. Deploy workers only after confirming the selected service's operating plan; verify generation, dispatch and housekeeping schedules. Set `EXECUTION_MODE=cloud` only after the cloud path works. Stop unnecessary duplicate local polling.
+Use either the local worker connected to the same backend (new work waits when it sleeps) or the supplied Trigger.dev tasks. Hosted workers need their own private environment, FFmpeg/FFprobe support and the current `apps/web/src/trigger` build. Deploy workers only after confirming the selected service's operating plan; verify generation, dispatch and housekeeping schedules. Set `EXECUTION_MODE=cloud` only after the cloud path works. Stop unnecessary duplicate local polling.
 
 Keep live generation disabled until a real admitted-user sign-in, source-to-text brief, explicit narration, queue recovery and scheduled update pass on the selected environment. Verify usage limits, signed media, export/deletion completion and logs without sensitive content. Existing local project link files are deliberately excluded; a new clone needs its own hosting linkage.
 

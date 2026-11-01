@@ -1,0 +1,36 @@
+npm notice run afield@0.1.0 test:e2e
+npm notice run npm run test:e2e --workspace @afield/web --
+npm notice run @afield/web@0.1.0 test:e2e
+npm notice run playwright test
+[WebServer] npm notice run @afield/web@0.1.0 start
+[WebServer] npm notice run next start --hostname 127.0.0.1 --port 3100
+[WebServer] (node:84552) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 21 tests using 1 worker
+
+(node:84578) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 tests/browser/app.spec.ts:28:1 › guest API and cross-origin mutations are denied without leaking private data (211ms)
+  ✓   2 tests/browser/app.spec.ts:42:1 › production HTML receives fresh nonce CSP and blocks framing (27ms)
+  ✓   3 tests/browser/app.spec.ts:54:1 › sign-in and setup guide render without account keys (1.4s)
+  ✓   4 tests/browser/app.spec.ts:67:1 › private workspace renders on desktop and mobile using synthetic fixtures (607ms)
+  ✓   5 tests/browser/app.spec.ts:78:1 › personal account opens usage while settings and sign out are separate actions (742ms)
+  ✓   6 tests/browser/app.spec.ts:115:1 › exploration retries preserve their idempotency identity (784ms)
+  ✓   7 tests/browser/app.spec.ts:143:1 › a failed generation stops status checks instead of repeatedly reloading the account (4.3s)
+  ✓   8 tests/browser/app.spec.ts:187:1 › topic templates can be copied, reordered, and reviewed without automatic source approval (654ms)
+  ✓   9 tests/browser/app.spec.ts:213:1 › Afield requests narration only after the button is pressed and reuses it when reopened (821ms)
+  ✓  10 tests/browser/auth.spec.ts:2:1 › Google callback failures are visible and switching to signup clears stale errors (429ms)
+  ✓  11 tests/browser/auth.spec.ts:21:1 › unapproved login and signup explain how to obtain access (582ms)
+  ✓  12 tests/browser/recurring-sources.spec.ts:2:1 › recurring source suggestions use compact publication rows and explicit selection (1.2s)
+  ✓  13 tests/browser/result-review.spec.ts:2:1 › published retry refreshes overview and exposes original inputs, coverage and usage (1.0s)
+  ✓  14 tests/browser/source-modes.spec.ts:63:1 › phased Explore source controls default to no search and web-only excludes chosen sources (789ms)
+  ✓  15 tests/browser/source-modes.spec.ts:101:1 › onboarding manually checks a feed without searching or auto approving (608ms)
+  ✓  16 tests/browser/source-rows.spec.ts:2:1 › source rows add immediately, retain methods, delete cleanly and hide in search-only (1.2s)
+  ✓  17 tests/browser/subtopics.spec.ts:26:1 › subtopic chips keep selections while regenerating and support deselection (1.1s)
+  ✓  18 tests/browser/subtopics.spec.ts:140:1 › subtopic provider failures are visible inline and can be retried (505ms)
+  ✓  19 tests/browser/ui-progress.spec.ts:2:1 › compact account controls, section spacing, retry progress and downloadable activity (763ms)
+  ✓  20 tests/browser/ui-progress.spec.ts:114:1 › main layouts keep headings inside panels and fit desktop and mobile (1.3s)
+  ✓  21 tests/browser/walkthrough.spec.ts:4:1 › document both main journeys with synthetic data and explicit source/audio consent (6.0s)
+
+  21 passed (29.9s)

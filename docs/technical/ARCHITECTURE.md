@@ -18,20 +18,22 @@ flowchart LR
   Web --> Media
 ```
 
+The repository uses one npm workspace. `apps/web/` owns the runnable app, tests, SQL migrations and app-specific configuration. `docs/`, `.github/` and `tooling/` serve the whole project. Root npm commands forward to the app.
+
 ## Code boundaries
 
 | Location | Responsibility |
 |---|---|
-| `src/app` | Next.js pages and route adapters; authenticate, validate origin/body, invoke database/features |
-| `src/components` | Reader workspace and reusable input/progress/source controls |
-| `src/domain` | Zod inputs, topic/template/schedule contracts, evidence, run and brief models; no provider clients |
-| `src/features/research` | Coverage routing, direct/feed/link/site retrieval, source and subtopic suggestions, evidence budgets |
-| `src/features/generation` | Leased generation, grounding/review/publication and explicit audio retry orchestration |
-| `src/features/audio` | Encoding, probing and transcript comparison helpers |
-| `src/features/scheduling` | Named-timezone recurrence, queue polling, dispatch and cleanup |
-| `src/infrastructure` | Supabase session/admin clients, admission, guarded network access and Gemini/Tavily adapters |
-| `src/config`, `src/core` | Runtime settings, error envelope, hashes and common limits |
-| `src/trigger`, `scripts` | Hosted task wrappers and local worker/readiness entry points |
+| `apps/web/src/app` | Next.js pages and route adapters; authenticate, validate origin/body, invoke database/features |
+| `apps/web/src/components` | Reader workspace and reusable input/progress/source controls |
+| `apps/web/src/domain` | Zod inputs, topic/template/schedule contracts, evidence, run and brief models; no provider clients |
+| `apps/web/src/features/research` | Coverage routing, direct/feed/link/site retrieval, source and subtopic suggestions, evidence budgets |
+| `apps/web/src/features/generation` | Leased generation, grounding/review/publication and explicit audio retry orchestration |
+| `apps/web/src/features/audio` | Encoding, probing and transcript comparison helpers |
+| `apps/web/src/features/scheduling` | Named-timezone recurrence, queue polling, dispatch and cleanup |
+| `apps/web/src/infrastructure` | Supabase session/admin clients, admission, guarded network access and Gemini/Tavily adapters |
+| `apps/web/src/config`, `apps/web/src/core` | Runtime settings, error envelope, hashes and common limits |
+| `apps/web/src/trigger`, `apps/web/scripts` | Hosted task wrappers and local worker/readiness entry points |
 
 ## Request and generation lifecycle
 

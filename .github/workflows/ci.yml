@@ -38,5 +38,5 @@ jobs:
         if: failure()
         with:
           name: browser-failures
-          path: test-results/
+          path: apps/web/test-results/
           retention-days: 7

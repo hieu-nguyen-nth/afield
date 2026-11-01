@@ -47,12 +47,12 @@ for (const file of files) {
     bad.push(`${file}: local or private-only reference`);
 }
 for (const ignored of [
-  ".env.local",
-  ".vercel/project.json",
+  "apps/web/.env.local",
+  "apps/web/.vercel/project.json",
   "node_modules/",
-  ".next/",
-  "test-results/",
-  "tsconfig.tsbuildinfo",
+  "apps/web/.next/",
+  "apps/web/test-results/",
+  "apps/web/tsconfig.tsbuildinfo",
 ]) {
   try {
     execFileSync("git", ["check-ignore", "--quiet", ignored]);

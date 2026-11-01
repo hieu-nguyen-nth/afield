@@ -39,8 +39,8 @@ Verified development runtime: **Node.js 26**, npm, and a browser supported by Pl
 
 ```sh
 npm ci
-cp .env.example .env.local
-# Fill in your own configuration; never commit .env.local.
+cp apps/web/.env.example apps/web/.env.local
+# Fill in your own configuration; never commit apps/web/.env.local.
 npm run check
 npm run lint
 npm test
@@ -66,27 +66,30 @@ For isolated UI tests, install Chromium with `npx playwright install chromium`, 
 | Quality | Vitest, PGlite PostgreSQL, Playwright, ESLint, TypeScript; pinned dependencies and npm lockfile |
 | Hosting | Next.js-compatible hosting; optional Vercel web and Trigger.dev worker. GitHub stores source and runs CI; it does not host this backend on Pages. |
 
-Exact versions live in [package.json](package.json) and [package-lock.json](package-lock.json). Model names and free-plan access must be revalidated in the operator's provider accounts before live use; the code never silently switches to a paid fallback.
+Exact versions live in [app package.json](apps/web/package.json) and [package-lock.json](package-lock.json). Model names and free-plan access must be revalidated in the operator's provider accounts before live use; the code never silently switches to a paid fallback.
 
 ## Repository map
 
+Run commands from the repository root. The npm workspace forwards them to `apps/web/`; application configuration and private local settings belong inside that folder.
+
 ```text
-src/app/               pages and HTTP route adapters
-src/components/        workspace and shared controls
-src/domain/            separate input, topic, research, brief and run models
-src/features/          research, generation, audio and scheduling logic
-src/infrastructure/    authentication, database, providers and network adapters
-src/config/            environment and runtime switches
-src/core/              errors and shared bounds
-src/trigger/           hosted background task entry points
-supabase/migrations/   ordered authoritative schema and database functions
-scripts/               readiness, bounded connection check and local worker
-tests/                unit, database and browser cases
-docs/                 current product, technical, user and verification material
-.github/               CI, issue forms and pull-request template
+README.md              product overview and start here
+apps/web/              complete runnable application
+  src/                 pages, UI, domain models, features and infrastructure
+  tests/               unit, database and browser cases
+  supabase/migrations/ ordered database schema and functions
+  scripts/             app readiness, connection check and local worker
+  *.config.*           application build, test and worker configuration
+  .env.example         safe configuration template
+  package.json         application dependencies and scripts
+docs/                  product, technical, user and verification material
+.github/               CI, contribution/security policies and issue/PR templates
+tooling/               repository-wide validation
+package.json           shared commands and npm workspace definition
+package-lock.json      one dependency lockfile for reproducible installation
 ```
 
-[Documentation index](docs/README.md) links every supported documentation area and source folder. [Architecture](docs/technical/ARCHITECTURE.md) · [Schema and models](docs/technical/DATA-MODELS.md) · [API](docs/technical/API.md) · [User guide](docs/USER-GUIDE.md) · [Decision log](docs/PRODUCT-DECISIONS.md) · [Deployment](docs/technical/DEPLOYMENT.md) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md).
+[Documentation index](docs/README.md) links every supported documentation area and source folder. [Architecture](docs/technical/ARCHITECTURE.md) · [Schema and models](docs/technical/DATA-MODELS.md) · [API](docs/technical/API.md) · [User guide](docs/USER-GUIDE.md) · [Decision log](docs/PRODUCT-DECISIONS.md) · [Deployment](docs/technical/DEPLOYMENT.md) · [Contributing](.github/CONTRIBUTING.md) · [Security](.github/SECURITY.md).
 
 ## Repository hygiene
 

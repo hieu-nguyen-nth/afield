@@ -22,6 +22,8 @@ Concise record reconstructed from the three development chats and the current co
 | Oct 31 | Local + database invitation configuration | One database admission list | Keep access changes consistent without local restarts |
 | Repository preparation | Flat library, PRDs outside app, accumulating old screenshots/logs | Domain/feature/infrastructure folders; current docs and new synthetic walkthrough/test evidence in the repo | Make ownership and review clear; exclude old drafts and local/private artifacts |
 
+| Repository cleanup | App configuration, tests and policies mixed at the top level | One runnable `apps/web` workspace, shared `docs`, GitHub policies/templates and repository `tooling` | Make the root easy to navigate while keeping root npm commands and one lockfile |
+
 ## Open decisions and follow-through
 
 Improve persisted publisher evidence, Update query hints and effective-model provenance before claiming full requirement alignment. Validate real OAuth, narration, schedules and hosted operation before expanding the pilot. Future search/bookmarks, follow-ups, inbox ingestion and collaboration remain roadmap items, not released features. Record future decisions with a dated before/after, owner rationale, affected requirements and validation evidence; do not backfill assumptions as approved decisions.

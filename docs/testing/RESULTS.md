@@ -1,4 +1,24 @@
-# Repository preparation — test results
+# Afield — test results
+
+## Current workspace layout — October 31, 2026
+
+The application, app-specific configuration, tests, scripts and database migrations now live in `apps/web/`. Root npm commands forward to that workspace; the root lockfile remains authoritative. Policies/templates are in `.github/`, current documentation is in `docs/`, and shared validation is in `tooling/`.
+
+| Check | Result | Evidence |
+|---|---|---|
+| Root command forwarding / TypeScript | Pass | [Output](current/structure-check.log) |
+| ESLint | Pass, no warnings | [Output](current/structure-lint.log) |
+| Unit tests | 40 passed in 13 files | [Output](current/structure-unit.log) |
+| Disposable PostgreSQL | 47 assertions and both source-setting scenarios passed | [Output](current/structure-db.log) |
+| Clean production build | Pass | [Output](current/structure-build.log) |
+| Complete browser suite | All 21 cases passed in one run | [Output](current/structure-browser.log) |
+| Repository and documentation | Pass | [Output](current/structure-repository.log) |
+
+The old generated build cache needed a clean rebuild after the directory move; it was retained outside the repository. Readiness verification confirmed that private app settings load from the new app folder without exposing values. The local worker/readiness commands use Node's TypeScript loader directly. Browser checks used an isolated production server with dummy settings and no worker or live-provider calls. Hosting root-directory requirements are documented; no hosted project was changed.
+
+The [source inventory](current/SOURCE-SHA256.txt) identifies the current workspace paths. The sections below retain the initial publication evidence and its narrower test-run boundaries. Live-service acceptance remains outstanding as described below.
+
+## Initial publication evidence
 
 Date: October 31, 2026 (America/Los_Angeles). Environment: macOS, Node.js 26.8.1, npm, local production Next.js server, installed Google Chrome. Scope: the organized current implementation and documentation; [source SHA-256 inventory](current/SOURCE-SHA256.txt) identifies tested code/configuration. No cloud database, live model, search or speech call was needed for this regression run.
 

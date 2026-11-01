@@ -14,6 +14,7 @@ Current product baseline: **v0.5, October 31, 2026**. Documentation describes im
 | [User guide](USER-GUIDE.md) | How to use Afield and recover from common problems |
 | [Decision log](PRODUCT-DECISIONS.md) | Before/after decisions and implications |
 | [Setup](KEYS-AND-SETUP.md) | Fresh-machine configuration and secret handling |
+| [Implementation status](technical/IMPLEMENTATION.md) | Current implementation boundary and outstanding acceptance |
 | [Architecture](technical/ARCHITECTURE.md) | Components, execution and security boundaries |
 | [Data models](technical/DATA-MODELS.md) | Actual tables, relationships, JSON contracts and retention |
 | [API](technical/API.md) | Current HTTP capabilities, request examples and failure behavior |
@@ -21,4 +22,6 @@ Current product baseline: **v0.5, October 31, 2026**. Documentation describes im
 | [Test plan](testing/TEST-PLAN.md) | Case inventory, commands and acceptance boundaries |
 | [Test results](testing/RESULTS.md) | Current checked source, outcomes and raw local evidence |
 
-Source: [app](../src/app) · [components](../src/components) · [domain](../src/domain) · [features](../src/features) · [infrastructure](../src/infrastructure) · [config](../src/config) · [core](../src/core) · [worker entry points](../src/trigger) · [migrations](../supabase/migrations) · [scripts](../scripts) · [tests](../tests) · [automation](../.github).
+Workspace: [web application](../apps/web). Repository validation lives in [tooling](../tooling).
+
+Source: [app](../apps/web/src/app) · [components](../apps/web/src/components) · [domain](../apps/web/src/domain) · [features](../apps/web/src/features) · [infrastructure](../apps/web/src/infrastructure) · [config](../apps/web/src/config) · [core](../apps/web/src/core) · [worker entry points](../apps/web/src/trigger) · [migrations](../apps/web/supabase/migrations) · [scripts](../apps/web/scripts) · [tests](../apps/web/tests) · [automation](../.github).

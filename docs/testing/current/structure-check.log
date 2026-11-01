@@ -1,0 +1,4 @@
+npm notice run afield@0.1.0 check
+npm notice run npm run check --workspace @afield/web --
+npm notice run @afield/web@0.1.0 check
+npm notice run tsc --noEmit

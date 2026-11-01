@@ -10,9 +10,9 @@ Tests deliberately separate deterministic regression checks from real-service ac
 | Source/subtopic quality | `source-recommendations`, `subtopics` unit tests; browser cases | Checked publisher evidence, weak candidate rejection, optional context, retained chip selections and accessible guidance |
 | Publication/audio | `pipeline`, `audio` tests; `database.ts` | Text first, evidence/lease/idempotency bounds, explicit audio, deduplication, private matching cache and cleanup |
 | Persistence | `database.ts`, `source-mode-db.ts` | All five migrations; owner separation, service-only operations, immutable publication, deletion/admission and mixed source snapshots |
-| Reader flows | `tests/browser` | Explore modes/confirmation, topic source/template review, retry/progress, original request/revision, history/account and desktop/mobile fit |
+| Reader flows | `apps/web/tests/browser` | Explore modes/confirmation, topic source/template review, retry/progress, original request/revision, history/account and desktop/mobile fit |
 | Walkthrough | `walkthrough.spec.ts` | Both main journeys through current rendered UI; source approval, request confirmation, saved brief/history and opt-in narration capture |
-| Repository | `scripts/verify-repository.mjs` | No excluded/private files staged; likely credential scan; local Markdown targets resolve |
+| Repository | `tooling/verify-repository.mjs` | No excluded/private files staged; likely credential scan; local Markdown targets resolve |
 
 ```sh
 npm run check
@@ -24,6 +24,8 @@ npx playwright install chromium
 npm run test:e2e
 npm run verify:repo
 ```
+
+Run all commands from the repository root; npm forwards application commands into `apps/web`. Browser artifacts stay in `apps/web/test-results`, while curated walkthrough images stay in `docs/walkthrough/images`.
 
 Browser tests start an isolated production app on port 3100, with a placeholder Supabase URL/key and live generation disabled. Never attach the suite to a real customer deployment. Walkthrough images use synthetic data and may be regenerated with `npm run docs:screenshots`. Screenshots/logs from superseded local development are excluded. Current logs and source checksums live in [results](RESULTS.md).
 

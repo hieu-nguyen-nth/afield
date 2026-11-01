@@ -6,7 +6,7 @@ test("document both main journeys with synthetic data and explicit source/audio 
 }) => {
   test.setTimeout(90000);
   page.setDefaultTimeout(10000);
-  const out = "docs/walkthrough/images";
+  const out = "../../docs/walkthrough/images";
   mkdirSync(out, { recursive: true });
   const shot = async (name: string) => {
     await page.screenshot({

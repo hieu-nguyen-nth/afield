@@ -1,7 +1,8 @@
+import path from "node:path";
 import type { NextConfig } from "next";
 const config: NextConfig = {
   poweredByHeader: false,
-  outputFileTracingRoot: process.cwd(),
+  outputFileTracingRoot: path.resolve(process.cwd(), "../.."),
   serverExternalPackages: [
     "undici",
     "@ffmpeg-installer/ffmpeg",
