@@ -1,6 +1,6 @@
 # HTTP API map
 
-The implementation is authoritative: [application routes](../../apps/web/src/app/api/v1/[...path]/route.ts) and [authentication routes](../../apps/web/src/app/api/auth/[action]/route.ts). JSON request contracts are defined in [domain models](../../apps/web/src/domain). All private application operations require an admitted verified session. Mutations require the configured same origin and bounded JSON bodies. Owner IDs come from the session, never client input. Responses containing private data are not publicly cached.
+The framework routes delegate through the [authenticated dispatcher](../../apps/web/src/app/api/v1/dispatcher.ts) to feature-owned `api/` handlers; authentication routes delegate to [auth handlers](../../apps/web/src/features/auth/handlers.ts). The implementation is authoritative: [application routes](../../apps/web/src/app/api/v1/[...path]/route.ts) and [authentication routes](../../apps/web/src/app/api/auth/[action]/route.ts). JSON request contracts are defined in [domain models](../../apps/web/src/features). All private application operations require an admitted verified session. Mutations require the configured same origin and bounded JSON bodies. Owner IDs come from the session, never client input. Responses containing private data are not publicly cached.
 
 | Method / path | Purpose |
 |---|---|

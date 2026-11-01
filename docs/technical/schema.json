@@ -1,0 +1,3417 @@
+{
+  "source": "committed migrations applied to disposable PostgreSQL",
+  "migrations": [
+    "20261028104228_initial_learning_brief.sql",
+    "20261028120924_private_retention_and_run_events.sql",
+    "20261028193403_afield_opt_in_audio_cache.sql",
+    "20261030055500_explicit_source_modes.sql",
+    "20261101000321_single_access_list.sql"
+  ],
+  "tables": [
+    {
+      "schema": "private",
+      "name": "allowed_emails",
+      "rls": true,
+      "columns": [
+        {
+          "column_name": "email",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "NO",
+          "column_default": null
+        }
+      ],
+      "constraints": [
+        {
+          "name": "allowed_emails_email_check",
+          "type": "c",
+          "definition": "CHECK ((email = lower(email)))"
+        },
+        {
+          "name": "allowed_emails_email_not_null",
+          "type": "n",
+          "definition": "NOT NULL email"
+        },
+        {
+          "name": "allowed_emails_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (email)"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "allowed_emails_pkey",
+          "definition": "CREATE UNIQUE INDEX allowed_emails_pkey ON private.allowed_emails USING btree (email)"
+        }
+      ],
+      "policies": [],
+      "grants": [
+        {
+          "grantee": "service_role",
+          "privilege_type": "DELETE"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "INSERT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "REFERENCES"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "SELECT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "TRIGGER"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "TRUNCATE"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "UPDATE"
+        }
+      ]
+    },
+    {
+      "schema": "private",
+      "name": "usage",
+      "rls": true,
+      "columns": [
+        {
+          "column_name": "metric",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "period",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "used",
+          "data_type": "bigint",
+          "udt_name": "int8",
+          "is_nullable": "NO",
+          "column_default": "0"
+        }
+      ],
+      "constraints": [
+        {
+          "name": "usage_metric_not_null",
+          "type": "n",
+          "definition": "NOT NULL metric"
+        },
+        {
+          "name": "usage_period_not_null",
+          "type": "n",
+          "definition": "NOT NULL period"
+        },
+        {
+          "name": "usage_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (metric, period)"
+        },
+        {
+          "name": "usage_used_not_null",
+          "type": "n",
+          "definition": "NOT NULL used"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "usage_pkey",
+          "definition": "CREATE UNIQUE INDEX usage_pkey ON private.usage USING btree (metric, period)"
+        }
+      ],
+      "policies": [],
+      "grants": [
+        {
+          "grantee": "service_role",
+          "privilege_type": "DELETE"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "INSERT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "REFERENCES"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "SELECT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "TRIGGER"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "TRUNCATE"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "UPDATE"
+        }
+      ]
+    },
+    {
+      "schema": "public",
+      "name": "audio_assets",
+      "rls": true,
+      "columns": [
+        {
+          "column_name": "id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": "gen_random_uuid()"
+        },
+        {
+          "column_name": "owner_id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "run_id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "text_hash",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "voice",
+          "data_type": "jsonb",
+          "udt_name": "jsonb",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "storage_path",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "duration",
+          "data_type": "double precision",
+          "udt_name": "float8",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "byte_size",
+          "data_type": "bigint",
+          "udt_name": "int8",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "status",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "attempt",
+          "data_type": "integer",
+          "udt_name": "int4",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "error",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "YES",
+          "column_default": null
+        },
+        {
+          "column_name": "created_at",
+          "data_type": "timestamp with time zone",
+          "udt_name": "timestamptz",
+          "is_nullable": "NO",
+          "column_default": "now()"
+        },
+        {
+          "column_name": "profile_key",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "NO",
+          "column_default": "'legacy'::text"
+        }
+      ],
+      "constraints": [
+        {
+          "name": "audio_assets_attempt_not_null",
+          "type": "n",
+          "definition": "NOT NULL attempt"
+        },
+        {
+          "name": "audio_assets_byte_size_check",
+          "type": "c",
+          "definition": "CHECK ((byte_size > 0))"
+        },
+        {
+          "name": "audio_assets_byte_size_not_null",
+          "type": "n",
+          "definition": "NOT NULL byte_size"
+        },
+        {
+          "name": "audio_assets_created_at_not_null",
+          "type": "n",
+          "definition": "NOT NULL created_at"
+        },
+        {
+          "name": "audio_assets_duration_check",
+          "type": "c",
+          "definition": "CHECK ((duration > (0)::double precision))"
+        },
+        {
+          "name": "audio_assets_duration_not_null",
+          "type": "n",
+          "definition": "NOT NULL duration"
+        },
+        {
+          "name": "audio_assets_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL id"
+        },
+        {
+          "name": "audio_assets_id_owner_id_run_id_text_hash_key",
+          "type": "u",
+          "definition": "UNIQUE (id, owner_id, run_id, text_hash)"
+        },
+        {
+          "name": "audio_assets_owner_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL owner_id"
+        },
+        {
+          "name": "audio_assets_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "audio_assets_profile_key_not_null",
+          "type": "n",
+          "definition": "NOT NULL profile_key"
+        },
+        {
+          "name": "audio_assets_run_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL run_id"
+        },
+        {
+          "name": "audio_assets_run_id_owner_id_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (run_id, owner_id) REFERENCES runs(id, owner_id) ON DELETE CASCADE"
+        },
+        {
+          "name": "audio_assets_status_check",
+          "type": "c",
+          "definition": "CHECK ((status = ANY (ARRAY['processing'::text, 'ready'::text, 'failed'::text])))"
+        },
+        {
+          "name": "audio_assets_status_not_null",
+          "type": "n",
+          "definition": "NOT NULL status"
+        },
+        {
+          "name": "audio_assets_storage_path_not_null",
+          "type": "n",
+          "definition": "NOT NULL storage_path"
+        },
+        {
+          "name": "audio_assets_text_hash_not_null",
+          "type": "n",
+          "definition": "NOT NULL text_hash"
+        },
+        {
+          "name": "audio_assets_voice_not_null",
+          "type": "n",
+          "definition": "NOT NULL voice"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "audio_asset_cache",
+          "definition": "CREATE INDEX audio_asset_cache ON public.audio_assets USING btree (owner_id, text_hash, profile_key) WHERE (status = 'ready'::text)"
+        },
+        {
+          "name": "audio_asset_object_refs",
+          "definition": "CREATE INDEX audio_asset_object_refs ON public.audio_assets USING btree (storage_path)"
+        },
+        {
+          "name": "audio_assets_id_owner_id_run_id_text_hash_key",
+          "definition": "CREATE UNIQUE INDEX audio_assets_id_owner_id_run_id_text_hash_key ON public.audio_assets USING btree (id, owner_id, run_id, text_hash)"
+        },
+        {
+          "name": "audio_assets_pkey",
+          "definition": "CREATE UNIQUE INDEX audio_assets_pkey ON public.audio_assets USING btree (id)"
+        },
+        {
+          "name": "audio_assets_run_id_created_at_idx",
+          "definition": "CREATE INDEX audio_assets_run_id_created_at_idx ON public.audio_assets USING btree (run_id, created_at DESC)"
+        }
+      ],
+      "policies": [
+        {
+          "name": "owned_read",
+          "roles": [
+            "authenticated"
+          ],
+          "cmd": "SELECT",
+          "qual": "((owner_id = ( SELECT auth.uid() AS uid)) AND ( SELECT private.admitted() AS admitted))",
+          "with_check": null
+        }
+      ],
+      "grants": [
+        {
+          "grantee": "service_role",
+          "privilege_type": "DELETE"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "INSERT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "REFERENCES"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "SELECT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "TRIGGER"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "TRUNCATE"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "UPDATE"
+        }
+      ]
+    },
+    {
+      "schema": "public",
+      "name": "audio_jobs",
+      "rls": true,
+      "columns": [
+        {
+          "column_name": "id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": "gen_random_uuid()"
+        },
+        {
+          "column_name": "owner_id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "brief_id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "status",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "NO",
+          "column_default": "'queued'::text"
+        },
+        {
+          "column_name": "lease_token",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "YES",
+          "column_default": null
+        },
+        {
+          "column_name": "lease_until",
+          "data_type": "timestamp with time zone",
+          "udt_name": "timestamptz",
+          "is_nullable": "YES",
+          "column_default": null
+        },
+        {
+          "column_name": "created_at",
+          "data_type": "timestamp with time zone",
+          "udt_name": "timestamptz",
+          "is_nullable": "NO",
+          "column_default": "now()"
+        },
+        {
+          "column_name": "attempts",
+          "data_type": "integer",
+          "udt_name": "int4",
+          "is_nullable": "NO",
+          "column_default": "0"
+        }
+      ],
+      "constraints": [
+        {
+          "name": "audio_jobs_attempts_not_null",
+          "type": "n",
+          "definition": "NOT NULL attempts"
+        },
+        {
+          "name": "audio_jobs_brief_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL brief_id"
+        },
+        {
+          "name": "audio_jobs_brief_id_owner_id_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (brief_id, owner_id) REFERENCES briefs(id, owner_id) ON DELETE CASCADE"
+        },
+        {
+          "name": "audio_jobs_created_at_not_null",
+          "type": "n",
+          "definition": "NOT NULL created_at"
+        },
+        {
+          "name": "audio_jobs_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL id"
+        },
+        {
+          "name": "audio_jobs_owner_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL owner_id"
+        },
+        {
+          "name": "audio_jobs_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "audio_jobs_status_check",
+          "type": "c",
+          "definition": "CHECK ((status = ANY (ARRAY['queued'::text, 'running'::text, 'completed'::text, 'failed'::text])))"
+        },
+        {
+          "name": "audio_jobs_status_not_null",
+          "type": "n",
+          "definition": "NOT NULL status"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "audio_jobs_pkey",
+          "definition": "CREATE UNIQUE INDEX audio_jobs_pkey ON public.audio_jobs USING btree (id)"
+        },
+        {
+          "name": "one_audio_job",
+          "definition": "CREATE UNIQUE INDEX one_audio_job ON public.audio_jobs USING btree (brief_id) WHERE (status = ANY (ARRAY['queued'::text, 'running'::text]))"
+        }
+      ],
+      "policies": [],
+      "grants": [
+        {
+          "grantee": "service_role",
+          "privilege_type": "DELETE"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "INSERT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "REFERENCES"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "SELECT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "TRIGGER"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "TRUNCATE"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "UPDATE"
+        }
+      ]
+    },
+    {
+      "schema": "public",
+      "name": "brief_items",
+      "rls": true,
+      "columns": [
+        {
+          "column_name": "id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": "gen_random_uuid()"
+        },
+        {
+          "column_name": "owner_id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "brief_id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "run_id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "position",
+          "data_type": "integer",
+          "udt_name": "int4",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "item",
+          "data_type": "jsonb",
+          "udt_name": "jsonb",
+          "is_nullable": "NO",
+          "column_default": null
+        }
+      ],
+      "constraints": [
+        {
+          "name": "brief_items_brief_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL brief_id"
+        },
+        {
+          "name": "brief_items_brief_id_owner_id_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (brief_id, owner_id) REFERENCES briefs(id, owner_id) ON DELETE CASCADE"
+        },
+        {
+          "name": "brief_items_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL id"
+        },
+        {
+          "name": "brief_items_id_owner_id_run_id_key",
+          "type": "u",
+          "definition": "UNIQUE (id, owner_id, run_id)"
+        },
+        {
+          "name": "brief_items_item_not_null",
+          "type": "n",
+          "definition": "NOT NULL item"
+        },
+        {
+          "name": "brief_items_owner_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL owner_id"
+        },
+        {
+          "name": "brief_items_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "brief_items_position_not_null",
+          "type": "n",
+          "definition": "NOT NULL \"position\""
+        },
+        {
+          "name": "brief_items_run_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL run_id"
+        },
+        {
+          "name": "brief_items_run_id_owner_id_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (run_id, owner_id) REFERENCES runs(id, owner_id) ON DELETE CASCADE"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "brief_items_id_owner_id_run_id_key",
+          "definition": "CREATE UNIQUE INDEX brief_items_id_owner_id_run_id_key ON public.brief_items USING btree (id, owner_id, run_id)"
+        },
+        {
+          "name": "brief_items_pkey",
+          "definition": "CREATE UNIQUE INDEX brief_items_pkey ON public.brief_items USING btree (id)"
+        }
+      ],
+      "policies": [
+        {
+          "name": "owned_read",
+          "roles": [
+            "authenticated"
+          ],
+          "cmd": "SELECT",
+          "qual": "((owner_id = ( SELECT auth.uid() AS uid)) AND ( SELECT private.admitted() AS admitted))",
+          "with_check": null
+        }
+      ],
+      "grants": [
+        {
+          "grantee": "authenticated",
+          "privilege_type": "SELECT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "DELETE"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "INSERT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "REFERENCES"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "SELECT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "TRIGGER"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "TRUNCATE"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "UPDATE"
+        }
+      ]
+    },
+    {
+      "schema": "public",
+      "name": "briefs",
+      "rls": true,
+      "columns": [
+        {
+          "column_name": "id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": "gen_random_uuid()"
+        },
+        {
+          "column_name": "owner_id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "run_id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "topic_id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "YES",
+          "column_default": null
+        },
+        {
+          "column_name": "intent",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "title",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "content",
+          "data_type": "jsonb",
+          "udt_name": "jsonb",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "canonical_text",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "text_hash",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "word_count",
+          "data_type": "integer",
+          "udt_name": "int4",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "snapshot",
+          "data_type": "jsonb",
+          "udt_name": "jsonb",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "citations",
+          "data_type": "jsonb",
+          "udt_name": "jsonb",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "budget_status",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "audio_status",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "audio_error",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "YES",
+          "column_default": null
+        },
+        {
+          "column_name": "selected_audio_id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "YES",
+          "column_default": null
+        },
+        {
+          "column_name": "partial",
+          "data_type": "boolean",
+          "udt_name": "bool",
+          "is_nullable": "NO",
+          "column_default": "false"
+        },
+        {
+          "column_name": "created_at",
+          "data_type": "timestamp with time zone",
+          "udt_name": "timestamptz",
+          "is_nullable": "NO",
+          "column_default": "now()"
+        }
+      ],
+      "constraints": [
+        {
+          "name": "briefs_audio_status_check",
+          "type": "c",
+          "definition": "CHECK ((audio_status = ANY (ARRAY['not_requested'::text, 'pending'::text, 'processing'::text, 'ready'::text, 'failed'::text])))"
+        },
+        {
+          "name": "briefs_audio_status_not_null",
+          "type": "n",
+          "definition": "NOT NULL audio_status"
+        },
+        {
+          "name": "briefs_budget_status_check",
+          "type": "c",
+          "definition": "CHECK ((budget_status = ANY (ARRAY['met'::text, 'unverified'::text, 'not_met'::text])))"
+        },
+        {
+          "name": "briefs_budget_status_not_null",
+          "type": "n",
+          "definition": "NOT NULL budget_status"
+        },
+        {
+          "name": "briefs_canonical_text_not_null",
+          "type": "n",
+          "definition": "NOT NULL canonical_text"
+        },
+        {
+          "name": "briefs_check",
+          "type": "c",
+          "definition": "CHECK ((((intent = 'explore'::text) AND (topic_id IS NULL)) OR ((intent = 'update'::text) AND (topic_id IS NOT NULL))))"
+        },
+        {
+          "name": "briefs_citations_not_null",
+          "type": "n",
+          "definition": "NOT NULL citations"
+        },
+        {
+          "name": "briefs_content_not_null",
+          "type": "n",
+          "definition": "NOT NULL content"
+        },
+        {
+          "name": "briefs_created_at_not_null",
+          "type": "n",
+          "definition": "NOT NULL created_at"
+        },
+        {
+          "name": "briefs_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL id"
+        },
+        {
+          "name": "briefs_id_owner_id_key",
+          "type": "u",
+          "definition": "UNIQUE (id, owner_id)"
+        },
+        {
+          "name": "briefs_intent_check",
+          "type": "c",
+          "definition": "CHECK ((intent = ANY (ARRAY['explore'::text, 'update'::text])))"
+        },
+        {
+          "name": "briefs_intent_not_null",
+          "type": "n",
+          "definition": "NOT NULL intent"
+        },
+        {
+          "name": "briefs_owner_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL owner_id"
+        },
+        {
+          "name": "briefs_partial_not_null",
+          "type": "n",
+          "definition": "NOT NULL partial"
+        },
+        {
+          "name": "briefs_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "briefs_run_id_key",
+          "type": "u",
+          "definition": "UNIQUE (run_id)"
+        },
+        {
+          "name": "briefs_run_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL run_id"
+        },
+        {
+          "name": "briefs_run_id_owner_id_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (run_id, owner_id) REFERENCES runs(id, owner_id) ON DELETE CASCADE"
+        },
+        {
+          "name": "briefs_selected_audio_id_owner_id_run_id_text_hash_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (selected_audio_id, owner_id, run_id, text_hash) REFERENCES audio_assets(id, owner_id, run_id, text_hash)"
+        },
+        {
+          "name": "briefs_snapshot_not_null",
+          "type": "n",
+          "definition": "NOT NULL snapshot"
+        },
+        {
+          "name": "briefs_text_hash_not_null",
+          "type": "n",
+          "definition": "NOT NULL text_hash"
+        },
+        {
+          "name": "briefs_title_not_null",
+          "type": "n",
+          "definition": "NOT NULL title"
+        },
+        {
+          "name": "briefs_topic_id_owner_id_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (topic_id, owner_id) REFERENCES topics(id, owner_id)"
+        },
+        {
+          "name": "briefs_word_count_not_null",
+          "type": "n",
+          "definition": "NOT NULL word_count"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "briefs_id_owner_id_key",
+          "definition": "CREATE UNIQUE INDEX briefs_id_owner_id_key ON public.briefs USING btree (id, owner_id)"
+        },
+        {
+          "name": "briefs_owner_id_created_at_id_idx",
+          "definition": "CREATE INDEX briefs_owner_id_created_at_id_idx ON public.briefs USING btree (owner_id, created_at DESC, id DESC)"
+        },
+        {
+          "name": "briefs_pkey",
+          "definition": "CREATE UNIQUE INDEX briefs_pkey ON public.briefs USING btree (id)"
+        },
+        {
+          "name": "briefs_run_id_key",
+          "definition": "CREATE UNIQUE INDEX briefs_run_id_key ON public.briefs USING btree (run_id)"
+        },
+        {
+          "name": "briefs_topic_id_created_at_idx",
+          "definition": "CREATE INDEX briefs_topic_id_created_at_idx ON public.briefs USING btree (topic_id, created_at DESC)"
+        }
+      ],
+      "policies": [
+        {
+          "name": "owned_read",
+          "roles": [
+            "authenticated"
+          ],
+          "cmd": "SELECT",
+          "qual": "((owner_id = ( SELECT auth.uid() AS uid)) AND ( SELECT private.admitted() AS admitted))",
+          "with_check": null
+        }
+      ],
+      "grants": [
+        {
+          "grantee": "authenticated",
+          "privilege_type": "SELECT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "DELETE"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "INSERT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "REFERENCES"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "SELECT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "TRIGGER"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "TRUNCATE"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "UPDATE"
+        }
+      ]
+    },
+    {
+      "schema": "public",
+      "name": "citations",
+      "rls": true,
+      "columns": [
+        {
+          "column_name": "id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": "gen_random_uuid()"
+        },
+        {
+          "column_name": "owner_id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "run_id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "item_id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "document_id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": null
+        }
+      ],
+      "constraints": [
+        {
+          "name": "citations_document_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL document_id"
+        },
+        {
+          "name": "citations_document_id_owner_id_run_id_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (document_id, owner_id, run_id) REFERENCES documents(id, owner_id, run_id)"
+        },
+        {
+          "name": "citations_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL id"
+        },
+        {
+          "name": "citations_item_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL item_id"
+        },
+        {
+          "name": "citations_item_id_owner_id_run_id_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (item_id, owner_id, run_id) REFERENCES brief_items(id, owner_id, run_id) ON DELETE CASCADE"
+        },
+        {
+          "name": "citations_owner_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL owner_id"
+        },
+        {
+          "name": "citations_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "citations_run_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL run_id"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "citations_pkey",
+          "definition": "CREATE UNIQUE INDEX citations_pkey ON public.citations USING btree (id)"
+        }
+      ],
+      "policies": [
+        {
+          "name": "owned_read",
+          "roles": [
+            "authenticated"
+          ],
+          "cmd": "SELECT",
+          "qual": "((owner_id = ( SELECT auth.uid() AS uid)) AND ( SELECT private.admitted() AS admitted))",
+          "with_check": null
+        }
+      ],
+      "grants": [
+        {
+          "grantee": "authenticated",
+          "privilege_type": "SELECT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "DELETE"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "INSERT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "REFERENCES"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "SELECT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "TRIGGER"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "TRUNCATE"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "UPDATE"
+        }
+      ]
+    },
+    {
+      "schema": "public",
+      "name": "documents",
+      "rls": true,
+      "columns": [
+        {
+          "column_name": "id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "run_id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "owner_id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "url",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "title",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "publisher",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "published_at",
+          "data_type": "timestamp with time zone",
+          "udt_name": "timestamptz",
+          "is_nullable": "YES",
+          "column_default": null
+        },
+        {
+          "column_name": "retrieved_at",
+          "data_type": "timestamp with time zone",
+          "udt_name": "timestamptz",
+          "is_nullable": "NO",
+          "column_default": "now()"
+        },
+        {
+          "column_name": "content_hash",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "text",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "origin",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "NO",
+          "column_default": null
+        }
+      ],
+      "constraints": [
+        {
+          "name": "documents_content_hash_not_null",
+          "type": "n",
+          "definition": "NOT NULL content_hash"
+        },
+        {
+          "name": "documents_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL id"
+        },
+        {
+          "name": "documents_id_owner_id_run_id_key",
+          "type": "u",
+          "definition": "UNIQUE (id, owner_id, run_id)"
+        },
+        {
+          "name": "documents_origin_check",
+          "type": "c",
+          "definition": "CHECK ((origin = ANY (ARRAY['followed'::text, 'discovered'::text])))"
+        },
+        {
+          "name": "documents_origin_not_null",
+          "type": "n",
+          "definition": "NOT NULL origin"
+        },
+        {
+          "name": "documents_owner_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL owner_id"
+        },
+        {
+          "name": "documents_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "documents_publisher_not_null",
+          "type": "n",
+          "definition": "NOT NULL publisher"
+        },
+        {
+          "name": "documents_retrieved_at_not_null",
+          "type": "n",
+          "definition": "NOT NULL retrieved_at"
+        },
+        {
+          "name": "documents_run_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL run_id"
+        },
+        {
+          "name": "documents_run_id_owner_id_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (run_id, owner_id) REFERENCES runs(id, owner_id) ON DELETE CASCADE"
+        },
+        {
+          "name": "documents_text_not_null",
+          "type": "n",
+          "definition": "NOT NULL text"
+        },
+        {
+          "name": "documents_title_not_null",
+          "type": "n",
+          "definition": "NOT NULL title"
+        },
+        {
+          "name": "documents_url_not_null",
+          "type": "n",
+          "definition": "NOT NULL url"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "documents_id_owner_id_run_id_key",
+          "definition": "CREATE UNIQUE INDEX documents_id_owner_id_run_id_key ON public.documents USING btree (id, owner_id, run_id)"
+        },
+        {
+          "name": "documents_pkey",
+          "definition": "CREATE UNIQUE INDEX documents_pkey ON public.documents USING btree (id)"
+        },
+        {
+          "name": "documents_run_id_idx",
+          "definition": "CREATE INDEX documents_run_id_idx ON public.documents USING btree (run_id)"
+        }
+      ],
+      "policies": [
+        {
+          "name": "owned_read",
+          "roles": [
+            "authenticated"
+          ],
+          "cmd": "SELECT",
+          "qual": "((owner_id = ( SELECT auth.uid() AS uid)) AND ( SELECT private.admitted() AS admitted))",
+          "with_check": null
+        }
+      ],
+      "grants": [
+        {
+          "grantee": "authenticated",
+          "privilege_type": "SELECT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "DELETE"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "INSERT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "REFERENCES"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "SELECT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "TRIGGER"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "TRUNCATE"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "UPDATE"
+        }
+      ]
+    },
+    {
+      "schema": "public",
+      "name": "events",
+      "rls": true,
+      "columns": [
+        {
+          "column_name": "id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": "gen_random_uuid()"
+        },
+        {
+          "column_name": "owner_id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "topic_id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "brief_id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "event_key",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "summary",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "created_at",
+          "data_type": "timestamp with time zone",
+          "udt_name": "timestamptz",
+          "is_nullable": "NO",
+          "column_default": "now()"
+        }
+      ],
+      "constraints": [
+        {
+          "name": "events_brief_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL brief_id"
+        },
+        {
+          "name": "events_brief_id_owner_id_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (brief_id, owner_id) REFERENCES briefs(id, owner_id) ON DELETE CASCADE"
+        },
+        {
+          "name": "events_created_at_not_null",
+          "type": "n",
+          "definition": "NOT NULL created_at"
+        },
+        {
+          "name": "events_event_key_not_null",
+          "type": "n",
+          "definition": "NOT NULL event_key"
+        },
+        {
+          "name": "events_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL id"
+        },
+        {
+          "name": "events_owner_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL owner_id"
+        },
+        {
+          "name": "events_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "events_summary_not_null",
+          "type": "n",
+          "definition": "NOT NULL summary"
+        },
+        {
+          "name": "events_topic_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL topic_id"
+        },
+        {
+          "name": "events_topic_id_owner_id_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (topic_id, owner_id) REFERENCES topics(id, owner_id)"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "events_pkey",
+          "definition": "CREATE UNIQUE INDEX events_pkey ON public.events USING btree (id)"
+        },
+        {
+          "name": "events_topic_id_created_at_idx",
+          "definition": "CREATE INDEX events_topic_id_created_at_idx ON public.events USING btree (topic_id, created_at DESC)"
+        }
+      ],
+      "policies": [
+        {
+          "name": "owned_read",
+          "roles": [
+            "authenticated"
+          ],
+          "cmd": "SELECT",
+          "qual": "((owner_id = ( SELECT auth.uid() AS uid)) AND ( SELECT private.admitted() AS admitted))",
+          "with_check": null
+        }
+      ],
+      "grants": [
+        {
+          "grantee": "authenticated",
+          "privilege_type": "SELECT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "DELETE"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "INSERT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "REFERENCES"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "SELECT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "TRIGGER"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "TRUNCATE"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "UPDATE"
+        }
+      ]
+    },
+    {
+      "schema": "public",
+      "name": "outbox",
+      "rls": true,
+      "columns": [
+        {
+          "column_name": "run_id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "dispatched_at",
+          "data_type": "timestamp with time zone",
+          "udt_name": "timestamptz",
+          "is_nullable": "YES",
+          "column_default": null
+        },
+        {
+          "column_name": "attempts",
+          "data_type": "integer",
+          "udt_name": "int4",
+          "is_nullable": "NO",
+          "column_default": "0"
+        }
+      ],
+      "constraints": [
+        {
+          "name": "outbox_attempts_not_null",
+          "type": "n",
+          "definition": "NOT NULL attempts"
+        },
+        {
+          "name": "outbox_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (run_id)"
+        },
+        {
+          "name": "outbox_run_id_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (run_id) REFERENCES runs(id) ON DELETE CASCADE"
+        },
+        {
+          "name": "outbox_run_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL run_id"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "outbox_pkey",
+          "definition": "CREATE UNIQUE INDEX outbox_pkey ON public.outbox USING btree (run_id)"
+        }
+      ],
+      "policies": [],
+      "grants": [
+        {
+          "grantee": "service_role",
+          "privilege_type": "DELETE"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "INSERT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "REFERENCES"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "SELECT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "TRIGGER"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "TRUNCATE"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "UPDATE"
+        }
+      ]
+    },
+    {
+      "schema": "public",
+      "name": "profiles",
+      "rls": true,
+      "columns": [
+        {
+          "column_name": "id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "timezone",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "NO",
+          "column_default": "'America/Los_Angeles'::text"
+        },
+        {
+          "column_name": "deleted_at",
+          "data_type": "timestamp with time zone",
+          "udt_name": "timestamptz",
+          "is_nullable": "YES",
+          "column_default": null
+        }
+      ],
+      "constraints": [
+        {
+          "name": "profiles_id_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (id) REFERENCES auth.users(id) ON DELETE CASCADE"
+        },
+        {
+          "name": "profiles_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL id"
+        },
+        {
+          "name": "profiles_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "profiles_timezone_not_null",
+          "type": "n",
+          "definition": "NOT NULL timezone"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "profiles_pkey",
+          "definition": "CREATE UNIQUE INDEX profiles_pkey ON public.profiles USING btree (id)"
+        }
+      ],
+      "policies": [
+        {
+          "name": "owned_read",
+          "roles": [
+            "authenticated"
+          ],
+          "cmd": "SELECT",
+          "qual": "((id = ( SELECT auth.uid() AS uid)) AND ( SELECT private.admitted() AS admitted))",
+          "with_check": null
+        }
+      ],
+      "grants": [
+        {
+          "grantee": "authenticated",
+          "privilege_type": "SELECT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "DELETE"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "INSERT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "REFERENCES"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "SELECT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "TRIGGER"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "TRUNCATE"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "UPDATE"
+        }
+      ]
+    },
+    {
+      "schema": "public",
+      "name": "review_records",
+      "rls": true,
+      "columns": [
+        {
+          "column_name": "id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": "gen_random_uuid()"
+        },
+        {
+          "column_name": "owner_id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "brief_id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "usefulness",
+          "data_type": "integer",
+          "udt_name": "int4",
+          "is_nullable": "YES",
+          "column_default": null
+        },
+        {
+          "column_name": "notes",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "YES",
+          "column_default": null
+        },
+        {
+          "column_name": "created_at",
+          "data_type": "timestamp with time zone",
+          "udt_name": "timestamptz",
+          "is_nullable": "NO",
+          "column_default": "now()"
+        }
+      ],
+      "constraints": [
+        {
+          "name": "review_records_brief_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL brief_id"
+        },
+        {
+          "name": "review_records_brief_id_owner_id_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (brief_id, owner_id) REFERENCES briefs(id, owner_id) ON DELETE CASCADE"
+        },
+        {
+          "name": "review_records_created_at_not_null",
+          "type": "n",
+          "definition": "NOT NULL created_at"
+        },
+        {
+          "name": "review_records_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL id"
+        },
+        {
+          "name": "review_records_owner_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL owner_id"
+        },
+        {
+          "name": "review_records_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "review_records_usefulness_check",
+          "type": "c",
+          "definition": "CHECK (((usefulness >= 1) AND (usefulness <= 5)))"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "review_records_pkey",
+          "definition": "CREATE UNIQUE INDEX review_records_pkey ON public.review_records USING btree (id)"
+        }
+      ],
+      "policies": [
+        {
+          "name": "owned_read",
+          "roles": [
+            "authenticated"
+          ],
+          "cmd": "SELECT",
+          "qual": "((owner_id = ( SELECT auth.uid() AS uid)) AND ( SELECT private.admitted() AS admitted))",
+          "with_check": null
+        }
+      ],
+      "grants": [
+        {
+          "grantee": "authenticated",
+          "privilege_type": "SELECT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "DELETE"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "INSERT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "REFERENCES"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "SELECT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "TRIGGER"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "TRUNCATE"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "UPDATE"
+        }
+      ]
+    },
+    {
+      "schema": "public",
+      "name": "run_events",
+      "rls": true,
+      "columns": [
+        {
+          "column_name": "id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": "gen_random_uuid()"
+        },
+        {
+          "column_name": "owner_id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "run_id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "stage",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "status",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "error_code",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "YES",
+          "column_default": null
+        },
+        {
+          "column_name": "created_at",
+          "data_type": "timestamp with time zone",
+          "udt_name": "timestamptz",
+          "is_nullable": "NO",
+          "column_default": "now()"
+        }
+      ],
+      "constraints": [
+        {
+          "name": "run_events_created_at_not_null",
+          "type": "n",
+          "definition": "NOT NULL created_at"
+        },
+        {
+          "name": "run_events_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL id"
+        },
+        {
+          "name": "run_events_owner_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL owner_id"
+        },
+        {
+          "name": "run_events_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "run_events_run_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL run_id"
+        },
+        {
+          "name": "run_events_run_id_owner_id_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (run_id, owner_id) REFERENCES runs(id, owner_id) ON DELETE CASCADE"
+        },
+        {
+          "name": "run_events_stage_not_null",
+          "type": "n",
+          "definition": "NOT NULL stage"
+        },
+        {
+          "name": "run_events_status_not_null",
+          "type": "n",
+          "definition": "NOT NULL status"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "run_events_owner_run",
+          "definition": "CREATE INDEX run_events_owner_run ON public.run_events USING btree (owner_id, run_id, created_at)"
+        },
+        {
+          "name": "run_events_pkey",
+          "definition": "CREATE UNIQUE INDEX run_events_pkey ON public.run_events USING btree (id)"
+        }
+      ],
+      "policies": [
+        {
+          "name": "owned_read",
+          "roles": [
+            "authenticated"
+          ],
+          "cmd": "SELECT",
+          "qual": "((owner_id = ( SELECT auth.uid() AS uid)) AND ( SELECT private.admitted() AS admitted))",
+          "with_check": null
+        }
+      ],
+      "grants": [
+        {
+          "grantee": "authenticated",
+          "privilege_type": "SELECT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "DELETE"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "INSERT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "REFERENCES"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "SELECT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "TRIGGER"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "TRUNCATE"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "UPDATE"
+        }
+      ]
+    },
+    {
+      "schema": "public",
+      "name": "runs",
+      "rls": true,
+      "columns": [
+        {
+          "column_name": "id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": "gen_random_uuid()"
+        },
+        {
+          "column_name": "owner_id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "topic_id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "YES",
+          "column_default": null
+        },
+        {
+          "column_name": "intent",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "trigger",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "request_key",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "request_hash",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "snapshot",
+          "data_type": "jsonb",
+          "udt_name": "jsonb",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "status",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "NO",
+          "column_default": "'queued'::text"
+        },
+        {
+          "column_name": "stage",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "NO",
+          "column_default": "'queued'::text"
+        },
+        {
+          "column_name": "error",
+          "data_type": "jsonb",
+          "udt_name": "jsonb",
+          "is_nullable": "YES",
+          "column_default": null
+        },
+        {
+          "column_name": "draft",
+          "data_type": "jsonb",
+          "udt_name": "jsonb",
+          "is_nullable": "NO",
+          "column_default": "'{}'::jsonb"
+        },
+        {
+          "column_name": "lease_token",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "YES",
+          "column_default": null
+        },
+        {
+          "column_name": "lease_until",
+          "data_type": "timestamp with time zone",
+          "udt_name": "timestamptz",
+          "is_nullable": "YES",
+          "column_default": null
+        },
+        {
+          "column_name": "next_eligible_at",
+          "data_type": "timestamp with time zone",
+          "udt_name": "timestamptz",
+          "is_nullable": "YES",
+          "column_default": null
+        },
+        {
+          "column_name": "attempts",
+          "data_type": "integer",
+          "udt_name": "int4",
+          "is_nullable": "NO",
+          "column_default": "0"
+        },
+        {
+          "column_name": "created_at",
+          "data_type": "timestamp with time zone",
+          "udt_name": "timestamptz",
+          "is_nullable": "NO",
+          "column_default": "now()"
+        },
+        {
+          "column_name": "updated_at",
+          "data_type": "timestamp with time zone",
+          "udt_name": "timestamptz",
+          "is_nullable": "NO",
+          "column_default": "now()"
+        }
+      ],
+      "constraints": [
+        {
+          "name": "runs_attempts_not_null",
+          "type": "n",
+          "definition": "NOT NULL attempts"
+        },
+        {
+          "name": "runs_check",
+          "type": "c",
+          "definition": "CHECK ((((intent = 'explore'::text) AND (topic_id IS NULL) AND (trigger = 'manual'::text)) OR ((intent = 'update'::text) AND (topic_id IS NOT NULL))))"
+        },
+        {
+          "name": "runs_created_at_not_null",
+          "type": "n",
+          "definition": "NOT NULL created_at"
+        },
+        {
+          "name": "runs_draft_not_null",
+          "type": "n",
+          "definition": "NOT NULL draft"
+        },
+        {
+          "name": "runs_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL id"
+        },
+        {
+          "name": "runs_id_owner_id_key",
+          "type": "u",
+          "definition": "UNIQUE (id, owner_id)"
+        },
+        {
+          "name": "runs_intent_check",
+          "type": "c",
+          "definition": "CHECK ((intent = ANY (ARRAY['explore'::text, 'update'::text])))"
+        },
+        {
+          "name": "runs_intent_not_null",
+          "type": "n",
+          "definition": "NOT NULL intent"
+        },
+        {
+          "name": "runs_owner_id_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (owner_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+        },
+        {
+          "name": "runs_owner_id_intent_request_key_key",
+          "type": "u",
+          "definition": "UNIQUE (owner_id, intent, request_key)"
+        },
+        {
+          "name": "runs_owner_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL owner_id"
+        },
+        {
+          "name": "runs_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "runs_request_hash_not_null",
+          "type": "n",
+          "definition": "NOT NULL request_hash"
+        },
+        {
+          "name": "runs_request_key_check",
+          "type": "c",
+          "definition": "CHECK (((length(request_key) >= 8) AND (length(request_key) <= 200)))"
+        },
+        {
+          "name": "runs_request_key_not_null",
+          "type": "n",
+          "definition": "NOT NULL request_key"
+        },
+        {
+          "name": "runs_snapshot_not_null",
+          "type": "n",
+          "definition": "NOT NULL snapshot"
+        },
+        {
+          "name": "runs_stage_not_null",
+          "type": "n",
+          "definition": "NOT NULL stage"
+        },
+        {
+          "name": "runs_status_check",
+          "type": "c",
+          "definition": "CHECK ((status = ANY (ARRAY['queued'::text, 'running'::text, 'completed'::text, 'failed'::text, 'skipped'::text])))"
+        },
+        {
+          "name": "runs_status_not_null",
+          "type": "n",
+          "definition": "NOT NULL status"
+        },
+        {
+          "name": "runs_topic_id_owner_id_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (topic_id, owner_id) REFERENCES topics(id, owner_id)"
+        },
+        {
+          "name": "runs_trigger_check",
+          "type": "c",
+          "definition": "CHECK ((trigger = ANY (ARRAY['manual'::text, 'scheduled'::text])))"
+        },
+        {
+          "name": "runs_trigger_not_null",
+          "type": "n",
+          "definition": "NOT NULL trigger"
+        },
+        {
+          "name": "runs_updated_at_not_null",
+          "type": "n",
+          "definition": "NOT NULL updated_at"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "runs_id_owner_id_key",
+          "definition": "CREATE UNIQUE INDEX runs_id_owner_id_key ON public.runs USING btree (id, owner_id)"
+        },
+        {
+          "name": "runs_owner_id_created_at_id_idx",
+          "definition": "CREATE INDEX runs_owner_id_created_at_id_idx ON public.runs USING btree (owner_id, created_at DESC, id DESC)"
+        },
+        {
+          "name": "runs_owner_id_intent_request_key_key",
+          "definition": "CREATE UNIQUE INDEX runs_owner_id_intent_request_key_key ON public.runs USING btree (owner_id, intent, request_key)"
+        },
+        {
+          "name": "runs_pkey",
+          "definition": "CREATE UNIQUE INDEX runs_pkey ON public.runs USING btree (id)"
+        },
+        {
+          "name": "runs_status_next_eligible_at_lease_until_idx",
+          "definition": "CREATE INDEX runs_status_next_eligible_at_lease_until_idx ON public.runs USING btree (status, next_eligible_at, lease_until)"
+        }
+      ],
+      "policies": [
+        {
+          "name": "owned_read",
+          "roles": [
+            "authenticated"
+          ],
+          "cmd": "SELECT",
+          "qual": "((owner_id = ( SELECT auth.uid() AS uid)) AND ( SELECT private.admitted() AS admitted))",
+          "with_check": null
+        }
+      ],
+      "grants": [
+        {
+          "grantee": "service_role",
+          "privilege_type": "DELETE"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "INSERT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "REFERENCES"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "SELECT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "TRIGGER"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "TRUNCATE"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "UPDATE"
+        }
+      ]
+    },
+    {
+      "schema": "public",
+      "name": "schedules",
+      "rls": true,
+      "columns": [
+        {
+          "column_name": "topic_id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "owner_id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "config",
+          "data_type": "jsonb",
+          "udt_name": "jsonb",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "next_at",
+          "data_type": "timestamp with time zone",
+          "udt_name": "timestamptz",
+          "is_nullable": "YES",
+          "column_default": null
+        },
+        {
+          "column_name": "checkpoint",
+          "data_type": "timestamp with time zone",
+          "udt_name": "timestamptz",
+          "is_nullable": "YES",
+          "column_default": null
+        }
+      ],
+      "constraints": [
+        {
+          "name": "schedules_config_not_null",
+          "type": "n",
+          "definition": "NOT NULL config"
+        },
+        {
+          "name": "schedules_owner_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL owner_id"
+        },
+        {
+          "name": "schedules_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (topic_id)"
+        },
+        {
+          "name": "schedules_topic_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL topic_id"
+        },
+        {
+          "name": "schedules_topic_id_owner_id_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (topic_id, owner_id) REFERENCES topics(id, owner_id) ON DELETE CASCADE"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "schedules_next_at_idx",
+          "definition": "CREATE INDEX schedules_next_at_idx ON public.schedules USING btree (next_at)"
+        },
+        {
+          "name": "schedules_pkey",
+          "definition": "CREATE UNIQUE INDEX schedules_pkey ON public.schedules USING btree (topic_id)"
+        }
+      ],
+      "policies": [
+        {
+          "name": "owned_read",
+          "roles": [
+            "authenticated"
+          ],
+          "cmd": "SELECT",
+          "qual": "((owner_id = ( SELECT auth.uid() AS uid)) AND ( SELECT private.admitted() AS admitted))",
+          "with_check": null
+        }
+      ],
+      "grants": [
+        {
+          "grantee": "authenticated",
+          "privilege_type": "SELECT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "DELETE"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "INSERT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "REFERENCES"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "SELECT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "TRIGGER"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "TRUNCATE"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "UPDATE"
+        }
+      ]
+    },
+    {
+      "schema": "public",
+      "name": "source_checks",
+      "rls": true,
+      "columns": [
+        {
+          "column_name": "id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": "gen_random_uuid()"
+        },
+        {
+          "column_name": "run_id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "owner_id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "scope",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "outcome",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "document_count",
+          "data_type": "integer",
+          "udt_name": "int4",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "reason",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "YES",
+          "column_default": null
+        },
+        {
+          "column_name": "checked_at",
+          "data_type": "timestamp with time zone",
+          "udt_name": "timestamptz",
+          "is_nullable": "NO",
+          "column_default": "now()"
+        }
+      ],
+      "constraints": [
+        {
+          "name": "source_checks_checked_at_not_null",
+          "type": "n",
+          "definition": "NOT NULL checked_at"
+        },
+        {
+          "name": "source_checks_document_count_not_null",
+          "type": "n",
+          "definition": "NOT NULL document_count"
+        },
+        {
+          "name": "source_checks_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL id"
+        },
+        {
+          "name": "source_checks_outcome_check",
+          "type": "c",
+          "definition": "CHECK ((outcome = ANY (ARRAY['success'::text, 'empty'::text, 'blocked'::text, 'failed'::text])))"
+        },
+        {
+          "name": "source_checks_outcome_not_null",
+          "type": "n",
+          "definition": "NOT NULL outcome"
+        },
+        {
+          "name": "source_checks_owner_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL owner_id"
+        },
+        {
+          "name": "source_checks_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "source_checks_run_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL run_id"
+        },
+        {
+          "name": "source_checks_run_id_owner_id_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (run_id, owner_id) REFERENCES runs(id, owner_id) ON DELETE CASCADE"
+        },
+        {
+          "name": "source_checks_scope_not_null",
+          "type": "n",
+          "definition": "NOT NULL scope"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "source_checks_pkey",
+          "definition": "CREATE UNIQUE INDEX source_checks_pkey ON public.source_checks USING btree (id)"
+        },
+        {
+          "name": "source_checks_run_id_idx",
+          "definition": "CREATE INDEX source_checks_run_id_idx ON public.source_checks USING btree (run_id)"
+        }
+      ],
+      "policies": [
+        {
+          "name": "owned_read",
+          "roles": [
+            "authenticated"
+          ],
+          "cmd": "SELECT",
+          "qual": "((owner_id = ( SELECT auth.uid() AS uid)) AND ( SELECT private.admitted() AS admitted))",
+          "with_check": null
+        }
+      ],
+      "grants": [
+        {
+          "grantee": "authenticated",
+          "privilege_type": "SELECT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "DELETE"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "INSERT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "REFERENCES"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "SELECT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "TRIGGER"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "TRUNCATE"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "UPDATE"
+        }
+      ]
+    },
+    {
+      "schema": "public",
+      "name": "sources",
+      "rls": true,
+      "columns": [
+        {
+          "column_name": "id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": "gen_random_uuid()"
+        },
+        {
+          "column_name": "owner_id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "topic_id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "config",
+          "data_type": "jsonb",
+          "udt_name": "jsonb",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "created_at",
+          "data_type": "timestamp with time zone",
+          "udt_name": "timestamptz",
+          "is_nullable": "NO",
+          "column_default": "now()"
+        }
+      ],
+      "constraints": [
+        {
+          "name": "sources_config_not_null",
+          "type": "n",
+          "definition": "NOT NULL config"
+        },
+        {
+          "name": "sources_created_at_not_null",
+          "type": "n",
+          "definition": "NOT NULL created_at"
+        },
+        {
+          "name": "sources_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL id"
+        },
+        {
+          "name": "sources_id_owner_id_topic_id_key",
+          "type": "u",
+          "definition": "UNIQUE (id, owner_id, topic_id)"
+        },
+        {
+          "name": "sources_owner_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL owner_id"
+        },
+        {
+          "name": "sources_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "sources_topic_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL topic_id"
+        },
+        {
+          "name": "sources_topic_id_owner_id_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (topic_id, owner_id) REFERENCES topics(id, owner_id) ON DELETE CASCADE"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "sources_id_owner_id_topic_id_key",
+          "definition": "CREATE UNIQUE INDEX sources_id_owner_id_topic_id_key ON public.sources USING btree (id, owner_id, topic_id)"
+        },
+        {
+          "name": "sources_pkey",
+          "definition": "CREATE UNIQUE INDEX sources_pkey ON public.sources USING btree (id)"
+        }
+      ],
+      "policies": [
+        {
+          "name": "owned_read",
+          "roles": [
+            "authenticated"
+          ],
+          "cmd": "SELECT",
+          "qual": "((owner_id = ( SELECT auth.uid() AS uid)) AND ( SELECT private.admitted() AS admitted))",
+          "with_check": null
+        }
+      ],
+      "grants": [
+        {
+          "grantee": "authenticated",
+          "privilege_type": "SELECT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "DELETE"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "INSERT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "REFERENCES"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "SELECT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "TRIGGER"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "TRUNCATE"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "UPDATE"
+        }
+      ]
+    },
+    {
+      "schema": "public",
+      "name": "subtopics",
+      "rls": true,
+      "columns": [
+        {
+          "column_name": "id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": "gen_random_uuid()"
+        },
+        {
+          "column_name": "owner_id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "topic_id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "name",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "position",
+          "data_type": "integer",
+          "udt_name": "int4",
+          "is_nullable": "NO",
+          "column_default": null
+        }
+      ],
+      "constraints": [
+        {
+          "name": "subtopics_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL id"
+        },
+        {
+          "name": "subtopics_name_not_null",
+          "type": "n",
+          "definition": "NOT NULL name"
+        },
+        {
+          "name": "subtopics_owner_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL owner_id"
+        },
+        {
+          "name": "subtopics_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "subtopics_position_not_null",
+          "type": "n",
+          "definition": "NOT NULL \"position\""
+        },
+        {
+          "name": "subtopics_topic_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL topic_id"
+        },
+        {
+          "name": "subtopics_topic_id_owner_id_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (topic_id, owner_id) REFERENCES topics(id, owner_id) ON DELETE CASCADE"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "subtopics_pkey",
+          "definition": "CREATE UNIQUE INDEX subtopics_pkey ON public.subtopics USING btree (id)"
+        }
+      ],
+      "policies": [
+        {
+          "name": "owned_read",
+          "roles": [
+            "authenticated"
+          ],
+          "cmd": "SELECT",
+          "qual": "((owner_id = ( SELECT auth.uid() AS uid)) AND ( SELECT private.admitted() AS admitted))",
+          "with_check": null
+        }
+      ],
+      "grants": [
+        {
+          "grantee": "authenticated",
+          "privilege_type": "SELECT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "DELETE"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "INSERT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "REFERENCES"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "SELECT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "TRIGGER"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "TRUNCATE"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "UPDATE"
+        }
+      ]
+    },
+    {
+      "schema": "public",
+      "name": "template_blocks",
+      "rls": true,
+      "columns": [
+        {
+          "column_name": "id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": "gen_random_uuid()"
+        },
+        {
+          "column_name": "owner_id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "topic_id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "template_id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "position",
+          "data_type": "integer",
+          "udt_name": "int4",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "block_type",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "NO",
+          "column_default": null
+        }
+      ],
+      "constraints": [
+        {
+          "name": "template_blocks_block_type_not_null",
+          "type": "n",
+          "definition": "NOT NULL block_type"
+        },
+        {
+          "name": "template_blocks_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL id"
+        },
+        {
+          "name": "template_blocks_owner_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL owner_id"
+        },
+        {
+          "name": "template_blocks_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "template_blocks_position_not_null",
+          "type": "n",
+          "definition": "NOT NULL \"position\""
+        },
+        {
+          "name": "template_blocks_template_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL template_id"
+        },
+        {
+          "name": "template_blocks_template_id_owner_id_topic_id_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (template_id, owner_id, topic_id) REFERENCES templates(id, owner_id, topic_id) ON DELETE CASCADE"
+        },
+        {
+          "name": "template_blocks_topic_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL topic_id"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "template_blocks_pkey",
+          "definition": "CREATE UNIQUE INDEX template_blocks_pkey ON public.template_blocks USING btree (id)"
+        }
+      ],
+      "policies": [
+        {
+          "name": "owned_read",
+          "roles": [
+            "authenticated"
+          ],
+          "cmd": "SELECT",
+          "qual": "((owner_id = ( SELECT auth.uid() AS uid)) AND ( SELECT private.admitted() AS admitted))",
+          "with_check": null
+        }
+      ],
+      "grants": [
+        {
+          "grantee": "authenticated",
+          "privilege_type": "SELECT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "DELETE"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "INSERT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "REFERENCES"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "SELECT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "TRIGGER"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "TRUNCATE"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "UPDATE"
+        }
+      ]
+    },
+    {
+      "schema": "public",
+      "name": "templates",
+      "rls": true,
+      "columns": [
+        {
+          "column_name": "id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": "gen_random_uuid()"
+        },
+        {
+          "column_name": "owner_id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "topic_id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "name",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "config",
+          "data_type": "jsonb",
+          "udt_name": "jsonb",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "version",
+          "data_type": "integer",
+          "udt_name": "int4",
+          "is_nullable": "NO",
+          "column_default": "1"
+        }
+      ],
+      "constraints": [
+        {
+          "name": "templates_config_not_null",
+          "type": "n",
+          "definition": "NOT NULL config"
+        },
+        {
+          "name": "templates_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL id"
+        },
+        {
+          "name": "templates_id_owner_id_topic_id_key",
+          "type": "u",
+          "definition": "UNIQUE (id, owner_id, topic_id)"
+        },
+        {
+          "name": "templates_name_not_null",
+          "type": "n",
+          "definition": "NOT NULL name"
+        },
+        {
+          "name": "templates_owner_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL owner_id"
+        },
+        {
+          "name": "templates_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "templates_topic_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL topic_id"
+        },
+        {
+          "name": "templates_topic_id_owner_id_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (topic_id, owner_id) REFERENCES topics(id, owner_id) ON DELETE CASCADE"
+        },
+        {
+          "name": "templates_version_not_null",
+          "type": "n",
+          "definition": "NOT NULL version"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "templates_id_owner_id_topic_id_key",
+          "definition": "CREATE UNIQUE INDEX templates_id_owner_id_topic_id_key ON public.templates USING btree (id, owner_id, topic_id)"
+        },
+        {
+          "name": "templates_pkey",
+          "definition": "CREATE UNIQUE INDEX templates_pkey ON public.templates USING btree (id)"
+        }
+      ],
+      "policies": [
+        {
+          "name": "owned_read",
+          "roles": [
+            "authenticated"
+          ],
+          "cmd": "SELECT",
+          "qual": "((owner_id = ( SELECT auth.uid() AS uid)) AND ( SELECT private.admitted() AS admitted))",
+          "with_check": null
+        }
+      ],
+      "grants": [
+        {
+          "grantee": "authenticated",
+          "privilege_type": "SELECT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "DELETE"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "INSERT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "REFERENCES"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "SELECT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "TRIGGER"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "TRUNCATE"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "UPDATE"
+        }
+      ]
+    },
+    {
+      "schema": "public",
+      "name": "topics",
+      "rls": true,
+      "columns": [
+        {
+          "column_name": "id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": "gen_random_uuid()"
+        },
+        {
+          "column_name": "owner_id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "name",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "config",
+          "data_type": "jsonb",
+          "udt_name": "jsonb",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "status",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "NO",
+          "column_default": "'draft'::text"
+        },
+        {
+          "column_name": "confirmed",
+          "data_type": "boolean",
+          "udt_name": "bool",
+          "is_nullable": "NO",
+          "column_default": "false"
+        },
+        {
+          "column_name": "pause_reason",
+          "data_type": "text",
+          "udt_name": "text",
+          "is_nullable": "YES",
+          "column_default": null
+        },
+        {
+          "column_name": "origin_brief_id",
+          "data_type": "uuid",
+          "udt_name": "uuid",
+          "is_nullable": "YES",
+          "column_default": null
+        },
+        {
+          "column_name": "created_at",
+          "data_type": "timestamp with time zone",
+          "udt_name": "timestamptz",
+          "is_nullable": "NO",
+          "column_default": "now()"
+        },
+        {
+          "column_name": "updated_at",
+          "data_type": "timestamp with time zone",
+          "udt_name": "timestamptz",
+          "is_nullable": "NO",
+          "column_default": "now()"
+        }
+      ],
+      "constraints": [
+        {
+          "name": "topics_config_not_null",
+          "type": "n",
+          "definition": "NOT NULL config"
+        },
+        {
+          "name": "topics_confirmed_not_null",
+          "type": "n",
+          "definition": "NOT NULL confirmed"
+        },
+        {
+          "name": "topics_created_at_not_null",
+          "type": "n",
+          "definition": "NOT NULL created_at"
+        },
+        {
+          "name": "topics_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL id"
+        },
+        {
+          "name": "topics_id_owner_id_key",
+          "type": "u",
+          "definition": "UNIQUE (id, owner_id)"
+        },
+        {
+          "name": "topics_name_not_null",
+          "type": "n",
+          "definition": "NOT NULL name"
+        },
+        {
+          "name": "topics_origin_brief_id_owner_id_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (origin_brief_id, owner_id) REFERENCES briefs(id, owner_id)"
+        },
+        {
+          "name": "topics_owner_id_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (owner_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+        },
+        {
+          "name": "topics_owner_id_not_null",
+          "type": "n",
+          "definition": "NOT NULL owner_id"
+        },
+        {
+          "name": "topics_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "topics_status_check",
+          "type": "c",
+          "definition": "CHECK ((status = ANY (ARRAY['draft'::text, 'active'::text, 'paused'::text])))"
+        },
+        {
+          "name": "topics_status_not_null",
+          "type": "n",
+          "definition": "NOT NULL status"
+        },
+        {
+          "name": "topics_updated_at_not_null",
+          "type": "n",
+          "definition": "NOT NULL updated_at"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "topics_id_owner_id_key",
+          "definition": "CREATE UNIQUE INDEX topics_id_owner_id_key ON public.topics USING btree (id, owner_id)"
+        },
+        {
+          "name": "topics_owner_id_created_at_idx",
+          "definition": "CREATE INDEX topics_owner_id_created_at_idx ON public.topics USING btree (owner_id, created_at DESC)"
+        },
+        {
+          "name": "topics_pkey",
+          "definition": "CREATE UNIQUE INDEX topics_pkey ON public.topics USING btree (id)"
+        }
+      ],
+      "policies": [
+        {
+          "name": "owned_read",
+          "roles": [
+            "authenticated"
+          ],
+          "cmd": "SELECT",
+          "qual": "((owner_id = ( SELECT auth.uid() AS uid)) AND ( SELECT private.admitted() AS admitted))",
+          "with_check": null
+        }
+      ],
+      "grants": [
+        {
+          "grantee": "authenticated",
+          "privilege_type": "SELECT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "DELETE"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "INSERT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "REFERENCES"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "SELECT"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "TRIGGER"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "TRUNCATE"
+        },
+        {
+          "grantee": "service_role",
+          "privilege_type": "UPDATE"
+        }
+      ]
+    }
+  ]
+}

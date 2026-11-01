@@ -1,0 +1,5 @@
+npm notice run afield@0.1.0 docs:schema
+npm notice run npm run docs:schema --workspace @afield/web --
+npm notice run @afield/web@0.1.0 docs:schema
+npm notice run node --import tsx scripts/export-schema.ts
+PASS: generated 21 table definitions with columns, constraints, indexes, policies and grants from 5 migrations; no live connection or private rows used.

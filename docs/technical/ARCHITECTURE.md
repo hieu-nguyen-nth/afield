@@ -24,16 +24,17 @@ The repository uses one npm workspace. `apps/web/` owns the runnable app, tests,
 
 | Location | Responsibility |
 |---|---|
-| `apps/web/src/app` | Next.js pages and route adapters; authenticate, validate origin/body, invoke database/features |
-| `apps/web/src/components` | Reader workspace and reusable input/progress/source controls |
-| `apps/web/src/domain` | Zod inputs, topic/template/schedule contracts, evidence, run and brief models; no provider clients |
-| `apps/web/src/features/research` | Coverage routing, direct/feed/link/site retrieval, source and subtopic suggestions, evidence budgets |
-| `apps/web/src/features/generation` | Leased generation, grounding/review/publication and explicit audio retry orchestration |
-| `apps/web/src/features/audio` | Encoding, probing and transcript comparison helpers |
-| `apps/web/src/features/scheduling` | Named-timezone recurrence, queue polling, dispatch and cleanup |
-| `apps/web/src/infrastructure` | Supabase session/admin clients, admission, guarded network access and Gemini/Tavily adapters |
-| `apps/web/src/config`, `apps/web/src/core` | Runtime settings, error envelope, hashes and common limits |
-| `apps/web/src/trigger`, `apps/web/scripts` | Hosted task wrappers and local worker/readiness entry points |
+| `apps/web/src/app` | Framework adapters and authenticated/rate-limited API composition |
+| `apps/web/src/components/workspace.tsx` | Reader navigation/state and feature-screen composition |
+| `apps/web/src/features` | Feature-owned models, API handlers, UI, services and unit tests; see the feature index |
+| `apps/web/src/features/auth` | Credential/identity contracts, sign-in/callback handlers, admission and verified-session guard |
+| `apps/web/src/shared` | Output-budget contracts, shared UI, browser HTTP helper and date formatting |
+| `apps/web/src/infrastructure` | Supabase session/database clients, database error mapping, generic HTTP validation, provider adapters and safe public fetching |
+| `apps/web/src/config`, `apps/web/src/core` | Environment switches, errors, hashes and common bounds |
+| `apps/web/src/trigger`, `apps/web/scripts` | Hosted wrappers and local worker/readiness entry points |
+| `apps/web/supabase/migrations` | Ordered relational schema, constraints, RLS and transactional commands |
+
+[Product feature map](PRODUCT-ARCHITECTURE.md) · [Authentication design](AUTHENTICATION.md) · [Models and relational schema](DATA-MODELS.md).
 
 ## Request and generation lifecycle
 
@@ -50,4 +51,4 @@ Browser roles use RLS and ownership predicates; privileged run/publication/cache
 
 Source content and model output are untrusted data. No provider secret is sent to source sites or exposed in `NEXT_PUBLIC_` variables. Live calls require explicit runtime switches and operator free-plan verification; those switches do not detect billing status. Shared usage reservations bound calls; provider dashboards remain authoritative for external usage. Text-model choices are explicit with no paid fallback.
 
-Database SQL is authoritative for transactions/leases and privacy constraints. See [models](DATA-MODELS.md), [API](API.md), [deployment](DEPLOYMENT.md) and [known gaps](../product/CHANGELOG.md). Domain-folder separation is a refactor, not a claim that the existing workspace component or API route has been decomposed into a complete service architecture.
+Database SQL is authoritative for transactions/leases and privacy constraints. See [models](DATA-MODELS.md), [API](API.md), [deployment](DEPLOYMENT.md) and [known gaps](../product/CHANGELOG.md). The workspace now composes feature screens, and the central API dispatcher delegates to feature handlers after shared authorization/rate checks. This remains one modular application and worker pipeline, not independently deployed microservices.

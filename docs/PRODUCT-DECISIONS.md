@@ -24,6 +24,8 @@ Concise record reconstructed from the three development chats and the current co
 
 | Repository cleanup | App configuration, tests and policies mixed at the top level | One runnable `apps/web` workspace, shared `docs`, GitHub policies/templates and repository `tooling` | Make the root easy to navigate while keeping root npm commands and one lockfile |
 
+| Feature ownership and review | Auth and feature behavior scattered across shared infrastructure, a large UI file and a central route | Feature-owned models/API/UI/tests, explicit auth design and short-lived feature branches with pull requests | Make a feature easy to find and change while preserving shared guards and SQL ownership constraints |
+
 ## Open decisions and follow-through
 
 Improve persisted publisher evidence, Update query hints and effective-model provenance before claiming full requirement alignment. Validate real OAuth, narration, schedules and hosted operation before expanding the pilot. Future search/bookmarks, follow-ups, inbox ingestion and collaboration remain roadmap items, not released features. Record future decisions with a dated before/after, owner rationale, affected requirements and validation evidence; do not backfill assumptions as approved decisions.

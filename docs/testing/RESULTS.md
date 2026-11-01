@@ -1,6 +1,23 @@
 # Afield — test results
 
-## Current workspace layout — October 31, 2026
+## Current feature boundaries and architecture — October 31, 2026
+
+Feature-owned models, UI, API handlers/services and unit tests now live together. Authentication has explicit identity/credential contracts, a verified-session guard, admission rules, handlers and its own tests. Framework routes and the workspace compose the features; the shared auth/origin/rate checks still run before product handlers. No SQL migration or remote auth setting changed.
+
+| Check | Result | Evidence |
+|---|---|---|
+| TypeScript | Pass | [Output](current/features-check.log) |
+| ESLint | Pass, no warnings | [Output](current/features-lint.log) |
+| Unit tests | 44 tests in 14 files passed | [Output](current/features-unit.log); includes four new verified-session/revocation cases |
+| Disposable database | 47 assertions plus both source-setting scenarios passed | [Output](current/features-db.log) |
+| Production build | Pass | [Output](current/features-build.log) |
+| Complete browser suite | All 21 cases passed | [Output](current/features-browser.log) |
+| Schema generation | 21 app tables from all five migrations | [Output](current/features-schema.log); local catalogs, no provider connection or data rows |
+| Repository/docs | Pass | [Output](current/features-repository.log) |
+
+The [source inventory](current/SOURCE-SHA256.txt) identifies the current feature layout. The generated [schema reference](../technical/DATABASE-SCHEMA.md) and [JSON model](../technical/schema.json) capture columns, constraints, indexes, RLS policies and role grants; CI regenerates them and checks for drift. The remaining live-service acceptance gates below still apply. This work is on a feature branch and pull request, not automatically merged to main.
+
+## Earlier workspace-layout verification
 
 The application, app-specific configuration, tests, scripts and database migrations now live in `apps/web/`. Root npm commands forward to that workspace; the root lockfile remains authoritative. Policies/templates are in `.github/`, current documentation is in `docs/`, and shared validation is in `tooling/`.
 

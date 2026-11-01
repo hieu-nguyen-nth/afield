@@ -23,7 +23,8 @@
     "worker:local": "npm run worker:local --workspace @afield/web --",
     "worker:deploy": "npm run worker:deploy --workspace @afield/web --",
     "docs:screenshots": "npm run docs:screenshots --workspace @afield/web --",
-    "verify:repo": "node tooling/verify-repository.mjs"
+    "verify:repo": "node tooling/verify-repository.mjs",
+    "docs:schema": "npm run docs:schema --workspace @afield/web --"
   },
   "overrides": {
     "ws": "8.21.0"

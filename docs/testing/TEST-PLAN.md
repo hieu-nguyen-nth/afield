@@ -1,6 +1,6 @@
 # Test cases and reproduction
 
-Tests deliberately separate deterministic regression checks from real-service acceptance. Unit tests mock network/provider boundaries. Database cases run all migrations in disposable PGlite PostgreSQL with synthetic users/roles. Browser cases use the real production UI with explicit API fixtures; guest/origin/CSP cases exercise the real local HTTP server. The isolated browser server uses dummy environment and never starts a worker.
+Tests deliberately separate deterministic regression checks from real-service acceptance. Unit tests are colocated under `src/**/__tests__` and mock network/provider boundaries. Database cases run all migrations in disposable PGlite PostgreSQL with synthetic users/roles. Browser cases use the real production UI with explicit API fixtures; guest/origin/CSP cases exercise the real local HTTP server. The isolated browser server uses dummy environment and never starts a worker.
 
 | Case group | Source | Assertions / expected behavior |
 |---|---|---|
@@ -12,6 +12,8 @@ Tests deliberately separate deterministic regression checks from real-service ac
 | Persistence | `database.ts`, `source-mode-db.ts` | All five migrations; owner separation, service-only operations, immutable publication, deletion/admission and mixed source snapshots |
 | Reader flows | `apps/web/tests/browser` | Explore modes/confirmation, topic source/template review, retry/progress, original request/revision, history/account and desktop/mobile fit |
 | Walkthrough | `walkthrough.spec.ts` | Both main journeys through current rendered UI; source approval, request confirmation, saved brief/history and opt-in narration capture |
+| Auth guard | `src/features/auth/__tests__/session.test.ts` | Reject invalid/unverified identities, revoked admission/deletion and accept only an admitted verified owner |
+| Schema reference | `scripts/export-schema.ts` with disposable database fixture | Generate all current app tables/columns/constraints/indexes/policies/grants; CI rejects drift |
 | Repository | `tooling/verify-repository.mjs` | No excluded/private files staged; likely credential scan; local Markdown targets resolve |
 
 ```sh
