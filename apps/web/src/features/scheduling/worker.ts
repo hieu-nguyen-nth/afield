@@ -1,8 +1,9 @@
 import { adminClient, command } from "../../infrastructure/database/database";
 import { requireLive } from "../../config/env";
-import { executeRun, retryAudio } from "../generation/pipeline";
+import { executeRun } from "../generation/pipeline";
+import { retryAudio } from "../audio/service";
 import { nextOccurrence, occurrenceKey } from "./schedule";
-import type { TopicConfig } from "../../domain/contracts";
+import type { TopicConfig } from "@/features/topics/models";
 export async function dispatch() {
   requireLive();
   const db = adminClient();

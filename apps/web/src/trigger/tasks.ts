@@ -1,6 +1,7 @@
 import { task, schedules } from "@trigger.dev/sdk/v3";
 import { dispatch, cleanup } from "../features/scheduling/worker";
-import { executeRun, retryAudio } from "../features/generation/pipeline";
+import { executeRun } from "../features/generation/pipeline";
+import { retryAudio } from "../features/audio/service";
 export const generate = task({
   id: "generate-brief",
   maxDuration: 600,

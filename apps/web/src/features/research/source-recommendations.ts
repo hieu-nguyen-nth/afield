@@ -2,7 +2,7 @@ import { z } from "zod";
 import { load } from "cheerio";
 import { gemini, search } from "../../infrastructure/providers/providers";
 import { safeFetch } from "../../infrastructure/network/safe-fetch";
-import { subtopicInput } from "./subtopics";
+import { subtopicInput } from "@/features/topics/subtopics";
 
 const publisherKinds = [
   "independent_publication",

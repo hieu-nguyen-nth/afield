@@ -317,9 +317,7 @@ test("document both main journeys with synthetic data and explicit source/audio 
     page.getByRole("button", { name: new RegExp(brief.title) }),
   ).toBeVisible();
   await shot("13-history");
-  await page
-    .getByRole("button", { name: "Personal account" })
-    .click();
+  await page.getByRole("button", { name: "Personal account" }).click();
   await expect(
     page.getByRole("heading", { name: "Account & usage", exact: true }),
   ).toBeVisible();
