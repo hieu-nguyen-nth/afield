@@ -1,0 +1,5 @@
+npm notice run afield@0.1.0 test:db
+npm notice run node --import tsx tests/database.ts && node --import tsx tests/source-mode-db.ts
+PASS: 47 PostgreSQL ownership, privilege, fencing, publication, idempotency, and quota assertions.
+PASS: source override is snapshotted; saved policy remains unchanged.
+PASS: mixed per-source search and exact-page settings persist in the accepted run.
